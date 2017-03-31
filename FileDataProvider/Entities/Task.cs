@@ -3,7 +3,7 @@ using FileDataProvider.Tools;
 
 namespace FileDataProvider.Entities
 {
-    public class Task
+    public class Task : IIdentificatable
     {
         private int _id;
         private string _header;

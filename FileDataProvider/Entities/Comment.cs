@@ -3,7 +3,7 @@ using FileDataProvider.Tools;
 
 namespace FileDataProvider.Entities
 {
-    public class Comment
+    public class Comment : IIdentificatable
     {
         private int _id;
         private int _taskId;
