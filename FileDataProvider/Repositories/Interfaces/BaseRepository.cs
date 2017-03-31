@@ -19,6 +19,8 @@ namespace FileDataProvider.Repositories
         protected abstract T readItem(StreamReader sr);
         protected abstract void writeItem(T item, StreamWriter sw);
 
+        protected virtual bool hasAccess(T item, int parentId) => true;
+
         private int getNextId()
         {
            
@@ -54,7 +56,7 @@ namespace FileDataProvider.Repositories
             
         }
 
-        public ICollection<T> GetAll()
+        public ICollection<T> GetAll(int parentId = -1)
         {
             ICollection<T> items = new List<T>();
             using(var fs = new FileStream(this.filePath, FileMode.OpenOrCreate))
@@ -63,7 +65,9 @@ namespace FileDataProvider.Repositories
                 {
                     while(sr.EndOfStream)
                     {
-                        items.Add(readItem(sr));
+                        var item = readItem(sr);
+                        if (hasAccess(item, parentId))
+                            items.Add(item);
                     }
                 }
             }
