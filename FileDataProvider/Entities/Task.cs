@@ -3,7 +3,7 @@ using FileDataProvider.Tools;
 
 namespace FileDataProvider.Entities
 {
-    public class Task : IIdentificatable
+    public class Task : IIdentificatable, IEquatable<Task>
     {
         private int _id;
         private string _header;
@@ -69,5 +69,20 @@ namespace FileDataProvider.Entities
         public DateTime LastEditedOn { get; set; }
         public bool IsCompleted { get; set; }
 
+        public bool Equals(Task other)
+        {
+            return
+                Id.Equals(other.Id) &&
+                Header.Equals(other.Header) &&
+                Description.Equals(other.Description) &&
+                RequiredHours.Equals(other.RequiredHours) &&
+                ExecutitiveId.Equals(other.ExecutitiveId) &&
+                CreatorId.Equals(other.CreatorId) &&
+                CreatedOn.Equals(other.CreatedOn) &&
+                LastEditedOn.Equals(other.LastEditedOn) &&
+                IsCompleted.Equals(other.IsCompleted);
+
+
+        }
     }
 }

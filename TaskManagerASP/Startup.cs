@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TaskManagerASP.Configuration;
 
 namespace TaskManagerASP
 {
@@ -31,11 +30,7 @@ namespace TaskManagerASP
             // Add framework services.
             services.AddMvc();
 
-            // Added - uses IOptions<T> for your settings.
-            services.AddOptions();
-
-            // Added - Confirms that we have a home for our DemoSettings
-            services.Configure<DataSettings>(Configuration.GetSection("DataSettings"));
+            services.AddSingleton(c => Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

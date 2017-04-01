@@ -21,8 +21,8 @@ namespace FileDataProvider.Repositories
             item.RequiredHours = int.Parse(sr.ReadLine());
             item.ExecutitiveId = int.Parse(sr.ReadLine());
             item.CreatorId = int.Parse(sr.ReadLine());
-            item.CreatedOn = DateTime.Parse(sr.ReadLine());
-            item.LastEditedOn = DateTime.Parse(sr.ReadLine());
+            item.CreatedOn = new DateTime(long.Parse(sr.ReadLine()));
+            item.LastEditedOn = new DateTime(long.Parse(sr.ReadLine()));
             item.IsCompleted = bool.Parse(sr.ReadLine());
 
             return item;
@@ -36,8 +36,8 @@ namespace FileDataProvider.Repositories
             sw.WriteLine(item.RequiredHours);
             sw.WriteLine(item.ExecutitiveId);
             sw.WriteLine(item.CreatorId);
-            sw.WriteLine(item.CreatedOn);
-            sw.WriteLine(item.LastEditedOn);
+            sw.WriteLine(item.CreatedOn.Ticks);
+            sw.WriteLine(item.LastEditedOn.Ticks);
             sw.WriteLine(item.IsCompleted);  
         }
         protected override bool hasAccess(Task item, int parentId)

@@ -1,0 +1,7 @@
+﻿{
+  "buildOptions": {
+    "copyToOutput": {
+      "includeFiles": [ "appsettings.json" ]
+    }
+  }
+}

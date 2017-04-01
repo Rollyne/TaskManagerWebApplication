@@ -3,7 +3,7 @@ using FileDataProvider.Tools;
 
 namespace FileDataProvider.Entities
 {
-    public class Comment : IIdentificatable
+    public class Comment : IIdentificatable, IEquatable<Comment>
     {
         private int _id;
         private int _taskId;
@@ -56,6 +56,15 @@ namespace FileDataProvider.Entities
                     throw new ArgumentException(ErrorMessages.CannotBeNullOrEmpty("Body"));
                 _body = value;
             }
+        }
+
+        public bool Equals(Comment other)
+        {
+            return
+                Id.Equals(other.Id) &&
+                TaskId.Equals(other.TaskId) &&
+                AuthorId.Equals(other.AuthorId) &&
+                Body.Equals(other.Body);
         }
     }
 }

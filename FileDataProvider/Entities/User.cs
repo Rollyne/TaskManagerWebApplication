@@ -3,7 +3,7 @@ using FileDataProvider.Tools;
 
 namespace FileDataProvider.Entities
 {
-    public class User : IIdentificatable
+    public class User : IIdentificatable, IEquatable<User>
     {
         private int _id;
         private string _userName;
@@ -42,5 +42,16 @@ namespace FileDataProvider.Entities
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public bool IsAdmin { get; set; }
+
+        public bool Equals(User other)
+        {
+            return
+                Id.Equals(other.Id) &&
+                UserName.Equals(other.UserName) &&
+                Password.Equals(other.Password) &&
+                FirstName.Equals(other.FirstName) &&
+                LastName.Equals(other.LastName) &&
+                IsAdmin.Equals(other.IsAdmin);
+        }
     }
 }
