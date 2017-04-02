@@ -12,13 +12,21 @@ namespace FileDataProvider.Repositories
 
         protected override User readItem(StreamReader sr)
         {
-            var item = new User();
-            item.Id = int.Parse(sr.ReadLine());
-            item.UserName = sr.ReadLine();
-            item.Password = sr.ReadLine();
-            item.FirstName = sr.ReadLine();
-            item.LastName = sr.ReadLine();
-            item.IsAdmin = bool.Parse(sr.ReadLine());
+            User item = null;
+            try
+            {
+                item = new User();
+                item.Id = int.Parse(sr.ReadLine());
+                item.UserName = sr.ReadLine();
+                item.Password = sr.ReadLine();
+                item.FirstName = sr.ReadLine();
+                item.LastName = sr.ReadLine();
+                item.IsAdmin = bool.Parse(sr.ReadLine());
+            }
+            catch(ArgumentException)
+            {
+            }
+            
             return item;
         }
 
@@ -34,18 +42,22 @@ namespace FileDataProvider.Repositories
 
         public User GetByUserNameAndPassword(string userName, string password)
         {
-            using (var fs = new FileStream(this.filePath, FileMode.OpenOrCreate))
+            try
             {
-                using (var sr = new StreamReader(fs))
+                using (var fs = new FileStream(this.filePath, FileMode.OpenOrCreate))
                 {
-                    while (sr.EndOfStream)
+                    using (var sr = new StreamReader(fs))
                     {
-                        User item = readItem(sr);
-                        if (item.UserName == userName && item.Password == password)
-                            return item;
+                        while (!sr.EndOfStream)
+                        {
+                            User item = readItem(sr);
+                            if (item.UserName == userName && item.Password == password)
+                                return item;
+                        }
                     }
                 }
             }
+            finally { }
             return null;
         }
     }

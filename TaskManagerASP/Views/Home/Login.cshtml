@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Login Page";
+}
+    <div class="container" width="300">
+        
+        <form asp-controller="Home" asp-action="Login" method="post">
+            <h2 class="form-signin-heading">Please log in</h2>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">@Html.ValidationMessage("authenticationFailed")</div>
+            }
+
+            <label for="inputUsername" class="sr-only" style="margin:auto">Username</label>
+            <input type="text" id="inputUsername" name="username" class="form-control" style="margin:auto" placeholder="Username" required autofocus>
+
+            <label for="inputPassword" class="sr-only" style="margin:auto">Password</label>
+            <input type="password" id="inputPassword" name="password" class="form-control" style="margin:auto" placeholder="Password" required>
+
+            <button class="btn btn-md btn-primary" style="margin:auto" type="submit">Sign in</button>
+        </form>
+
+    </div> <!-- /container -->

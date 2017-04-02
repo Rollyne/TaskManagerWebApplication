@@ -63,7 +63,7 @@ namespace FileDataProvider.Repositories
             {
                 using (var sr = new StreamReader(fs))
                 {
-                    while(sr.EndOfStream)
+                    while(!sr.EndOfStream)
                     {
                         var item = readItem(sr);
                         if (hasAccess(item, parentId))
@@ -80,7 +80,7 @@ namespace FileDataProvider.Repositories
             {
                 using (var sr = new StreamReader(fs))
                 {
-                    while (sr.EndOfStream)
+                    while (!sr.EndOfStream)
                     {
                         T item = readItem(sr);
                         if (item.Id == id)

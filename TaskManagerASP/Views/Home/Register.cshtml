@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Register Page";
+}
+<div class="container" width="300">
+
+    <form asp-controller="Home" asp-action="Register" method="post" form="form-signin">
+        <h2 class="form-signin-heading">Please register</h2>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">@Html.ValidationMessage("registrationFailed")</div>
+        }
+
+        <label for="inputUsername" class="sr-only" style="margin:auto">Username</label>
+        <input type="text" id="inputUsername" name="username" class="form-control" style="margin:auto" placeholder="Username" required autofocus>
+
+        <label for="inputPassword" class="sr-only" style="margin:auto">Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" style="margin:auto" placeholder="Password" required>
+
+        <label for="inputFirstName" class="sr-only" style="margin:auto">First Name</label>
+        <input type="text" id="inputFirstName" name="firstName" class="form-control" style="margin:auto" placeholder="First Name">
+
+        <label for="inputLastName" class="sr-only" style="margin:auto">Last Name</label>
+        <input type="text" id="inputLastName" name="lastName" class="form-control" style="margin:auto" placeholder="Last Name">
+
+        <button class="btn btn-md btn-primary" style="margin:auto" type="submit">Register</button>
+    </form>
+
+</div> <!-- /container -->

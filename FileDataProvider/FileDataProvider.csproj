@@ -8,8 +8,4 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TaskManagerASP\TaskManagerASP.csproj" />
-  </ItemGroup>
-
 </Project>

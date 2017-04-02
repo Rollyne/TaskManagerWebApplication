@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
-using TaskManagerASP;
-using TaskManagerASP.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace FileDataProvider.Repositories
 {
@@ -14,12 +11,7 @@ namespace FileDataProvider.Repositories
             this.config = config;
             DataPath = config["DataSettings:DataPath"];
         }
-        public RepositoryProvider()
-        {
-            this.config = Configuration.GetConfig();
-            DataPath = config["DataSettings:DataPath"];
-        }
-        
+
         public CommentRepository GetCommentRepository(string fileName)
         {
             return new CommentRepository($"{DataPath}\\{fileName}");

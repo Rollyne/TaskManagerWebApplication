@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using TaskManagerASP.Configuration;
+using TaskManagerASP;
 
 namespace UnitTests.FileDataProviderTests.RepositoriesTests.Mocks
 {
@@ -13,7 +13,7 @@ namespace UnitTests.FileDataProviderTests.RepositoriesTests.Mocks
         public static string FakeCommentDataFileProvider(params Comment[] entities)
         {
             const string mockFileName = "mockComments.dat";
-            var repoProvider = new RepositoryProvider();
+            var repoProvider = new RepositoryProvider(Configuration.GetConfig());
             var repository = repoProvider.GetCommentRepository(mockFileName);
             string filePath = $"{repoProvider.DataPath}\\{mockFileName}";
             using (var fs = new FileStream(filePath, FileMode.Create))

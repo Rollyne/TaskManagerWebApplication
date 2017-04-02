@@ -1,5 +1,7 @@
-﻿using FileDataProvider.Entities;
+﻿using System;
+using FileDataProvider.Entities;
 using FileDataProvider.Repositories;
+using Microsoft.Extensions.Configuration;
 
 namespace FileDataProvider.Services
 {
@@ -12,13 +14,19 @@ namespace FileDataProvider.Services
         }
         public AuthenticationService()
         {
-            _repo = new RepositoryProvider().GetUserRepository();
         }
 
         public User LoggedUser { get; set; }
-        public void Authenticate(string userName, string password)
+        public void AuthenticateUser(string userName, string password, IConfiguration config)
         {
+            if(_repo == default(UserRepository))
+                _repo = new RepositoryProvider(config).GetUserRepository();
             LoggedUser = _repo.GetByUserNameAndPassword(userName, password);
+        }
+
+        public void GetBy(string username, string password, object p)
+        {
+            throw new NotImplementedException();
         }
     }
 }
