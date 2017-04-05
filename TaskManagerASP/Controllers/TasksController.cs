@@ -1,142 +1,54 @@
 using FileDataProvider.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using TaskManagerASP.Models;
 using TaskManagerASP.Tools;
+using FileDataProvider.Repositories;
 
 namespace TaskManagerASP.Controllers
 {
-    public class TasksController : Controller
+    public class TasksController : BaseCRUDController<Task>
     {
-        private bool Exists(Task task)
-        {
-            if(task == null)
-            {
-                ModelState.AddModelError("DoesNotExist", ErrorMessages.DoesNotExist("task"));
-                return false;
-            }
-            return true;
-        }
-        private bool HasAccess(Task task)
+        protected override IRepository<Task> Repository 
+            => RepositoryProvider.GetRepositoryProvider().GetTaskRepository();
+
+        protected override bool HasAccess(Task task)
         {
             int parentId = AuthenticationManager.GetLoggedUser(HttpContext).Id;
-            if (task.CreatorId != parentId || task.ExecutitiveId != parentId)
+            if (task.CreatorId == parentId || task.ExecutitiveId == parentId)
             {
-                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess("task"));
-                return false;
+                return true;
             }
-            return true;
-        }
-        public IActionResult Index()
-        {
-            if (AuthenticationManager.GetLoggedUser(HttpContext) == null)
-            {
-                ViewBag.NotLoggedMessage = ErrorMessages.NotAuthenticatedUser;
-                return RedirectToAction("Login", "Home");
-            }
-
-            ViewBag.Tasks = RepositoryProvider
-                                .GetRepositoryProvider()
-                                .GetTaskRepository()
-                                .GetAll(AuthenticationManager.GetLoggedUser(HttpContext).Id);
-            return View();
-        }
-
-        public IActionResult Details(int id)
-        {
-            if (AuthenticationManager.GetLoggedUser(HttpContext) == null)
-            {
-                ViewBag.NotLoggedMessage = ErrorMessages.NotAuthenticatedUser;
-                return RedirectToAction("Login", "Home");
-            }
-
-            var task = RepositoryProvider
-                                .GetRepositoryProvider()
-                                .GetTaskRepository()
-                                .GetById(id);
-            if(!Exists(task) || !HasAccess(task))
-                return RedirectToAction("Index", "Tasks");
-
-            ViewBag.Task = task;
-            return View();
+            ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess("task"));
+            return false;
+           
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public override IActionResult Create()
         {
-            if (AuthenticationManager.GetLoggedUser(HttpContext) == null)
-            {
-                ViewBag.NotLoggedMessage = ErrorMessages.NotAuthenticatedUser;
-                return RedirectToAction("Login", "Home");
-            }
             var task = new Task();
+
             task.CreatorId = AuthenticationManager.GetLoggedUser(HttpContext).Id;
+            ViewData["Task"] = task;
 
-            ViewBag.Task = task;
-            return View();
+            return base.Create();
         }
         [HttpPost]
-        public IActionResult Create(Task task)
+        public override IActionResult Create(Task task)
         {
-            if (AuthenticationManager.GetLoggedUser(HttpContext) == null)
-            {
-                ViewBag.NotLoggedMessage = ErrorMessages.NotAuthenticatedUser;
-                return RedirectToAction("Login", "Home");
-            }
+            task.CreatedOn = DateTime.Now;
+            task.LastEditedOn = DateTime.Now;
 
-            RepositoryProvider
-                        .GetRepositoryProvider()
-                        .GetTaskRepository()
-                        .Save(task);
-            return RedirectToAction("Index", "Contacts");
-        }
-
-        [HttpGet]
-        public IActionResult Edit(int id)
-        {
-            if (AuthenticationManager.GetLoggedUser(HttpContext) == null)
-            {
-                ViewBag.NotLoggedMessage = ErrorMessages.NotAuthenticatedUser;
-                return RedirectToAction("Login", "Home");
-            }
-
-            var task = RepositoryProvider
-                            .GetRepositoryProvider()
-                            .GetTaskRepository()
-                            .GetById(id);
-
-            if (!Exists(task) || !HasAccess(task))
-                return RedirectToAction("Index", "Tasks");
-
-
-            ViewBag.Task = task;
-            return View();
+            return base.Create(task);
         }
 
         [HttpPost]
-        public IActionResult Edit(Task task)
+        public override IActionResult Edit(Task task)
         {
-            return Create(task);
+            task.LastEditedOn = DateTime.Now;
+
+            return base.Edit(task);
         }
-
-        public IActionResult Delete(int id)
-        {
-            if (AuthenticationManager.GetLoggedUser(HttpContext) == null)
-            {
-                ViewBag.NotLoggedMessage = ErrorMessages.NotAuthenticatedUser;
-                return RedirectToAction("Login", "Home");
-            }
-
-            var repository = RepositoryProvider
-                        .GetRepositoryProvider()
-                        .GetTaskRepository();
-            var task = repository.GetById(id);
-            if(!Exists(task) || !HasAccess(task))
-                return RedirectToAction("Index", "Tasks");
-
-            repository.Delete(task);
-         
-            return RedirectToAction("Index", "ContactsManager");
-        }
-
     }
 }

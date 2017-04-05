@@ -26,8 +26,5 @@
   <ItemGroup>
     <ProjectReference Include="..\FileDataProvider\FileDataProvider.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Tasks\" />
-  </ItemGroup>
 
 </Project>

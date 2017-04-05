@@ -1,0 +1,42 @@
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Task details</h2>
+@{ 
+    var task = (FileDataProvider.Entities.Task)ViewBag.Task;
+}
+<h4>Header:</h4>
+<div class="well">@task.Header</div>
+
+<h4>Description</h4>
+<div class="well">@task.Description</div>
+
+<h4>Required hours</h4>
+<div class="well">@task.RequiredHours</div>
+
+<h4>Executitive</h4>
+<div class="well">@task.ExecutitiveId</div>
+
+<h4>Creator</h4>
+<div class="well">@task.CreatorId</div>
+
+<h4>Created on</h4>
+<div class="well">@task.CreatedOn</div>
+
+<h4>Last edited</h4>
+<div class="well">@task.LastEditedOn</div>
+
+<h4>Status</h4>
+@if (task.IsCompleted)
+{
+    <div class="well">Completed</div>
+}
+else
+{
+
+    <div class="well">In process</div>
+}
+
+

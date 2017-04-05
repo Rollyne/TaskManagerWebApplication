@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewData["Title"] = "Add new task";
+}
+<h1>Create a new task</h1>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationMessage("CreateFailed")</div>
+}
+<form asp-controller="Tasks" asp-action="Create" method="post">
+    @{ 
+        var task = (FileDataProvider.Entities.Task)ViewBag.Task;
+    }
+    <input type="hidden" value="@task.CreatorId" name="CreatorId" required/>
+
+    <div class="form-group">
+        <label for="Header">Header</label>
+        <input type="text" name="Header" placeholder="Proper header.." required/>
+    </div>
+    
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea name="Description" placeholder="Detailed description.." cols="15" rows="10"></textarea>
+    </div>
+    
+    <div class="form-group">
+        <label for="RequiredHours">Required hours</label>
+        <input type="number" name="RequiredHours" value="1" />
+    </div>
+    
+    <div class="form-group">
+        <label for="ExecutitiveId">Executitive id</label>
+        <input type="number" name="ExecutitiveId" />
+    </div>
+    
+    <input type="submit" class="btn btn-primary" value="Create" />
+</form>
+<a asp-controller="Tasks" asp-action="Index"><button class="btn btn-warning">Cancel</button></a>

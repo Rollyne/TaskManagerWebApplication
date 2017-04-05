@@ -1,0 +1,43 @@
+
+@{
+    ViewData["Title"] = "Edit task";
+}
+
+<h2>Edit</h2>
+
+@if (!ViewData.ModelState.IsValid)
+            {
+    <div class="alert alert-danger">@Html.ValidationMessage("EditFailed")</div>
+}
+
+<form asp-controller="Tasks" asp-action="Edit" method="post">
+    @{
+        var task = (FileDataProvider.Entities.Task)ViewBag.Task;
+    }
+    <input type="hidden" value="@task.Id" name="Id" required/>
+    <input type="hidden" value="@task.CreatorId" name="CreatorId" />
+    <input type="hidden" value="@task.CreatedOn" name="CreatedOn" />
+
+    <div class="form-group">
+        <label for="Header">Header</label>
+        <input type="text" name="Header" class="form-control" placeholder="Proper header.." value="@task.Header" required/>
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea name="Description" class="form-control" placeholder="Detailed description.." cols="15" rows="10">@task.Description</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="RequiredHours">Required hours</label>
+        <input type="number" class="form-control" name="RequiredHours" value="@task.RequiredHours" />
+    </div>
+
+    <div class="form-group">
+        <label for="ExecutitiveId">Executitive id</label>
+        <input type="number" class="form-control" name="ExecutitiveId" value="@task.ExecutitiveId" />
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Edit" />  
+    <a asp-controller="Tasks" asp-action="Index"><button class="btn btn-warning">Cancel</button></a>
+</form>

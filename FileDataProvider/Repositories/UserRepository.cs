@@ -13,20 +13,14 @@ namespace FileDataProvider.Repositories
         protected override User readItem(StreamReader sr)
         {
             User item = null;
-            try
-            {
-                item = new User();
-                item.Id = int.Parse(sr.ReadLine());
-                item.UserName = sr.ReadLine();
-                item.Password = sr.ReadLine();
-                item.FirstName = sr.ReadLine();
-                item.LastName = sr.ReadLine();
-                item.IsAdmin = bool.Parse(sr.ReadLine());
-            }
-            catch(ArgumentException)
-            {
-            }
-            
+            item = new User();
+            item.Id = int.Parse(sr.ReadLine());
+            item.UserName = sr.ReadLine();
+            item.Password = sr.ReadLine();
+            item.FirstName = sr.ReadLine();
+            item.LastName = sr.ReadLine();
+            item.IsAdmin = bool.Parse(sr.ReadLine());
+
             return item;
         }
 

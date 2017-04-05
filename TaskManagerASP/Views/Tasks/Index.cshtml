@@ -1,7 +1,24 @@
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tasks";
 }
+<h2>Tasks</h2>
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationMessage("DoesNotExist")</div>
+}
+    @foreach(var item in (ICollection<FileDataProvider.Entities.Task>)ViewBag.Tasks)
+    {
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3 class="taskTitle">@item.Header</h3>
+            <p><small style="color: #aaa;">@item.Description</small></p>
+            <a asp-controller="Tasks" asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-info">Details</button></a>   
+            <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>   
+            <a asp-controller="Tasks" asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-danger">Delete</button></a>
+        </div>
+    </div>
+    }
 
-<h2>Index</h2>
+<a asp-controller="Tasks" asp-action="Create" ><button class="btn btn-primary">Create new task</button></a>
 
