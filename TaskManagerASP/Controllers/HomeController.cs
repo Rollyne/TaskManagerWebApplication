@@ -10,7 +10,7 @@ namespace TaskManagerASP.Controllers
     public class HomeController : Controller
     {
         public readonly IRepositoryProvider repositoryProvider 
-            = new RepositoryProvider(Configuration.GetConfig());
+            = new FileRepositoryProvider(Configuration.GetConfig());
         public IActionResult Index()
         {
             return View();
@@ -75,7 +75,7 @@ namespace TaskManagerASP.Controllers
                 return RedirectToAction("Login", "Home");
 
             AuthenticationManager.Logout(HttpContext);
-            return RedirectToAction("Login", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Error()

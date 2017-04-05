@@ -20,7 +20,7 @@ namespace FileDataProvider.Services
         public void AuthenticateUser(string userName, string password, IConfiguration config)
         {
             if(_repo == default(UserRepository))
-                _repo = new RepositoryProvider(config).GetUserRepository();
+                _repo = new FileRepositoryProvider(config).GetUserRepository();
             LoggedUser = _repo.GetByUserNameAndPassword(userName, password);
         }
 

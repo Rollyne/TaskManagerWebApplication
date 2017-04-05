@@ -13,7 +13,7 @@ namespace UnitTests.FileDataProviderTests.RepositoriesTests.Mocks
         public static string FakeUserDataFileProvider(params User[] entities)
         {
             const string mockFileName = "mockUsers.dat";
-            var repoProvider = new RepositoryProvider(Configuration.GetConfig());
+            var repoProvider = new FileRepositoryProvider(Configuration.GetConfig());
             var repository = repoProvider.GetUserRepository(mockFileName);
             string filePath = $"{repoProvider.DataPath}\\{mockFileName}";
             using (var fs = new FileStream(filePath, FileMode.Create))

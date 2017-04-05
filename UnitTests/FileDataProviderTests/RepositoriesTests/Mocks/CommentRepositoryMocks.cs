@@ -13,7 +13,7 @@ namespace UnitTests.FileDataProviderTests.RepositoriesTests.Mocks
         public static string FakeCommentDataFileProvider(params Comment[] entities)
         {
             const string mockFileName = "mockComments.dat";
-            var repoProvider = new RepositoryProvider(Configuration.GetConfig());
+            var repoProvider = new FileRepositoryProvider(Configuration.GetConfig());
             var repository = repoProvider.GetCommentRepository(mockFileName);
             string filePath = $"{repoProvider.DataPath}\\{mockFileName}";
             using (var fs = new FileStream(filePath, FileMode.Create))

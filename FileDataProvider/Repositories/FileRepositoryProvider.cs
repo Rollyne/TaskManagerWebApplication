@@ -2,11 +2,11 @@
 
 namespace FileDataProvider.Repositories
 {
-    public class RepositoryProvider : IRepositoryProvider
+    public class FileRepositoryProvider : IRepositoryProvider
     {
         public string DataPath { get; set; }
         private readonly IConfiguration config;
-        public RepositoryProvider(IConfiguration config)
+        public FileRepositoryProvider(IConfiguration config)
         {
             this.config = config;
             DataPath = config["DataSettings:DataPath"];

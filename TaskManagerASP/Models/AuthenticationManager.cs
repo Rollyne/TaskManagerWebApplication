@@ -27,11 +27,13 @@ namespace TaskManagerASP.Models
 
             authenticationService = httpContext.Session.GetObjectFromJson<AuthenticationService>("LoggedUser");
             authenticationService.AuthenticateUser(username, password, Configuration.GetConfig());
+
+            httpContext.Session.SetObjectAsJson("LoggedUser", authenticationService);
         }
         public static void Logout(HttpContext httpContext)
 
         {
-            httpContext.Session.GetObjectFromJson<AuthenticationService>(null);
+            httpContext.Session.SetObjectAsJson("LoggedUser", null);
         }
     }
 }
