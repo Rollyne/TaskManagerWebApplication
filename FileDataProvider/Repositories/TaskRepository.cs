@@ -42,7 +42,7 @@ namespace FileDataProvider.Repositories
         }
         protected override bool hasAccess(Task item, int parentId)
         {
-            if (parentId == -1 || item.CreatorId == parentId)
+            if (parentId == -1 || item.CreatorId == parentId || item.ExecutitiveId == parentId)
                 return true;
             return false;
         }

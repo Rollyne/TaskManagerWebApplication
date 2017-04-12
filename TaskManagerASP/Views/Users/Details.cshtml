@@ -5,22 +5,24 @@
 
 <h2>Task details</h2>
 @{
-    var task = (FileDataProvider.Entities.User)ViewBag.User;
+    var user = (FileDataProvider.Entities.User)ViewBag.User;
 }
-<h4>Usernae:</h4>
-<div class="well">@task.UserName</div>
+<h4>Id</h4>
+<div class="well">@user.Id</div>
+<h4>Username</h4>
+<div class="well">@user.UserName</div>
 
 <h4>Password</h4>
-<div class="well">@task.Password</div>
+<div class="well">@user.Password</div>
 
 <h4>First name</h4>
-<div class="well">@task.FirstName</div>
+<div class="well">@user.FirstName</div>
 
 <h4>Last name</h4>
-<div class="well">@task.LastName</div>
+<div class="well">@user.LastName</div>
 
 <h4>Admin status</h4>
-@if (task.IsAdmin)
+@if (user.IsAdmin)
 {
     <div class="well">Administrator</div>
 }
