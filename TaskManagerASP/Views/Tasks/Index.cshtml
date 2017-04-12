@@ -3,9 +3,9 @@
     ViewData["Title"] = "Tasks";
 }
 <h2>Tasks</h2>
-@if (!ViewData.ModelState.IsValid)
+@if (ViewData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger">@Html.ValidationMessage("DoesNotExist")</div>
+    <div class="alert alert-danger">@ViewData["ErrorMessage"].ToString()</div>
 }
     @foreach(var item in (ICollection<FileDataProvider.Entities.Task>)ViewBag.Tasks)
     {

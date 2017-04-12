@@ -1,0 +1,32 @@
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Task details</h2>
+@{
+    var task = (FileDataProvider.Entities.User)ViewBag.User;
+}
+<h4>Usernae:</h4>
+<div class="well">@task.UserName</div>
+
+<h4>Password</h4>
+<div class="well">@task.Password</div>
+
+<h4>First name</h4>
+<div class="well">@task.FirstName</div>
+
+<h4>Last name</h4>
+<div class="well">@task.LastName</div>
+
+<h4>Admin status</h4>
+@if (task.IsAdmin)
+{
+    <div class="well">Administrator</div>
+}
+else
+{
+    <div class="well">Not an admin</div>
+}
+
+

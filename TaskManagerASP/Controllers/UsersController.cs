@@ -15,7 +15,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!AuthenticationManager.GetLoggedUser(HttpContext).IsAdmin)
             {
-                ModelState.AddModelError("AccessDenied", ErrorMessages.ShouldBeAdmin);
+                ViewData["ErrorMessage"] = ErrorMessages.ShouldBeAdmin;
                 return false;
             }
             return base.IsAuthorized();

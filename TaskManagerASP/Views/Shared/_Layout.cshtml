@@ -40,6 +40,10 @@
                     }
                     else
                     {
+                        @if (TaskManagerASP.Models.AuthenticationManager.GetLoggedUser(Context).IsAdmin)
+                        {
+                            <li><a asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
+                        }
                         <li><a asp-area="" asp-controller="Tasks" asp-action="Index">Tasks</a></li>
                         <li><a asp-area="" asp-controller="Home" asp-action="Logout">Logout</a></li>
                     }
