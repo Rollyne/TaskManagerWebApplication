@@ -26,5 +26,8 @@
   <ItemGroup>
     <ProjectReference Include="..\FileDataProvider\FileDataProvider.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Shared\Components\Comments\" />
+  </ItemGroup>
 
 </Project>

@@ -38,7 +38,7 @@ namespace FileDataProvider.Repositories
                 }
             }
 
-            return id;
+            return id + 1;
 
         }
 

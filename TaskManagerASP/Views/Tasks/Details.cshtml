@@ -39,4 +39,20 @@ else
     <div class="well">In process</div>
 }
 
+<h4>Comments</h4>
+<div class="well">
+    @await Component.InvokeAsync("Comments", new {parentId = task.Id})
+</div>
+
+<h5>Add new comment</h5>
+<div class="well">
+    <form asp-action="Create" asp-controller="Comments" method="post">
+        <input type="hidden" name="TaskId" value="@task.Id" />
+        <textarea class="form-control" name="Body"></textarea>
+        <br/>
+        <input type="submit" class="btn btn-primary" />
+    </form>
+    
+</div>
+
 

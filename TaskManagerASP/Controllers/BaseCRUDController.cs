@@ -34,7 +34,7 @@ namespace TaskManagerASP.Controllers
         protected virtual bool HasAccess(TEntity task)
             => true;
 
-        public IActionResult Index()
+        public virtual IActionResult Index()
         {
             if (!IsAuthorized())
             {

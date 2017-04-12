@@ -1,0 +1,12 @@
+
+@model System.Collections.Generic.ICollection<FileDataProvider.Entities.Comment>
+@foreach(var comment in Model)
+{
+    if (comment.AuthorId == TaskManagerASP.Models.AuthenticationManager.GetLoggedUser(Context).Id)
+    {
+        <a class="glyphicon glyphicon-pencil"></a>
+        <a class="glyphicon glyphicon-trash" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"></a>
+    }
+    <div class="well">@comment.Body</div>
+}
+

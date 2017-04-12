@@ -9,7 +9,7 @@ namespace TaskManagerASP
             var builder = new ConfigurationBuilder()
                 //TODO: Make the BasePath automatic
                 //Change the basepath according to your machine
-                .SetBasePath(@"C:\Users\User\Source\Repos\TaskManagerWebApplication\TaskManagerASP\")
+                .SetBasePath(@"C:\Users\princ\OneDrive\Documents\visual studio 2017\Projects\TaskManagerASP\TaskManagerASP\")
                 .AddJsonFile("appsettings.json",
                 optional: true,
                 reloadOnChange: true);
