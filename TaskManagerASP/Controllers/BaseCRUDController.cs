@@ -26,7 +26,7 @@ namespace TaskManagerASP.Controllers
         {
             if (item == null)
             {
-                ModelState.AddModelError("DoesNotExist", ErrorMessages.DoesNotExist(typeof(TEntity).Name.ToLower()));
+                ViewData["ErrorMessage"] = ErrorMessages.DoesNotExist(typeof(TEntity).Name.ToLower());
                 return false;
             }
             return true;
@@ -50,7 +50,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             var item = Repository.GetById(id);
@@ -67,7 +67,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             return View();
@@ -77,7 +77,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             try
@@ -99,7 +99,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             var item = Repository.GetById(id);
@@ -117,7 +117,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             try
@@ -139,7 +139,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                return RedirectToAction("Login", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             var item = Repository.GetById(id);

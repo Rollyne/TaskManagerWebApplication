@@ -1,0 +1,39 @@
+
+@{
+    ViewData["Title"] = "Create new user";
+}
+<h1>Create a new user</h1>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationMessage("CreateFailed")</div>
+}
+<form asp-controller="Users" asp-action="Create" method="post">
+    @{
+        var user = (FileDataProvider.Entities.User)ViewBag.User;
+    }
+
+    <div class="form-group">
+        <label for="UserName">Username</label>
+        <input type="text" name="UserName" placeholder="Username.." required />
+    </div>
+
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="text" name="Password" placeholder="Password.." required />
+    </div>
+    <div class="form-group">
+        <label for="FirstName">FirstName</label>
+        <input type="text" name="FirstName" placeholder="FirstName.." required />
+    </div>
+    <div class="form-group">
+        <label for="FirstName">LastName</label>
+        <input type="text" name="LastName" placeholder="LastName.." required />
+    </div>    
+    <div class="form-group">
+        <label for="IsAdmin">Is administrator</label>
+        <input type="checkbox" name="IsAdmin" />
+    </div>
+    <input type="submit" class="btn btn-primary" value="Create" />
+</form>
+<a asp-controller="Users" asp-action="Index"><button class="btn btn-warning">Cancel</button></a>

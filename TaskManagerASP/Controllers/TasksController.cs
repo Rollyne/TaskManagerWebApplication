@@ -19,7 +19,7 @@ namespace TaskManagerASP.Controllers
             {
                 return true;
             }
-            ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess("task"));
+            ViewData["ErrorMessage"] = ErrorMessages.NoAccess("task");
             return false;
            
         }

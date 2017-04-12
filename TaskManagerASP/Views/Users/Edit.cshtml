@@ -1,0 +1,48 @@
+
+@{
+    ViewData["Title"] = "Edit user";
+}
+<h1>Edit user</h1>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationMessage("EditFailed")</div>
+}
+<form asp-controller="Users" asp-action="Edit" method="post">
+    @{
+        var user = (FileDataProvider.Entities.User)ViewBag.User;
+    }
+    <input type="hidden" value="@user.Id" name="Id" required />
+
+    <div class="form-group">
+        <label for="UserName">Username</label>
+        <input type="text" name="UserName" placeholder="Username.." value="@user.UserName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="text" name="Password" placeholder="Password.." value="@user.Password" required />
+    </div>
+    <div class="form-group">
+        <label for="FirstName">FirstName</label>
+        <input type="text" name="FirstName" placeholder="FirstName.." value="@user.FirstName" required />
+    </div>
+    <div class="form-group">
+        <label for="FirstName">LastName</label>
+        <input type="text" name="LastName" placeholder="LastName.." value="@user.LastName" required />
+    </div>
+    <div class="form-group">
+        <label for="IsAdmin">Is administrator</label>
+        @if (user.IsAdmin)
+        {
+            <input type="checkbox" name="IsAdmin" checked />
+        }
+        else
+        {
+            <input type="checkbox" name="IsAdmin" />
+        }
+
+    </div>
+    <input type="submit" class="btn btn-primary" value="Edit" />
+</form>
+<a asp-controller="Users" asp-action="Index"><button class="btn btn-warning">Cancel</button></a>
