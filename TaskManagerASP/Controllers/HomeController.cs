@@ -3,16 +3,25 @@ using FileDataProvider.Entities;
 using FileDataProvider.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
+using DbDataProvider;
+using Microsoft.EntityFrameworkCore;
 using TaskManagerASP.Models;
 
 namespace TaskManagerASP.Controllers
 {
     public class HomeController : Controller
     {
+        private ITaskManagerContext context;
+        public HomeController(ITaskManagerContext context)
+        {
+            this.context = context;
+        }
         public readonly IRepositoryProvider repositoryProvider 
             = new FileRepositoryProvider(Configuration.GetConfig());
         public IActionResult Index()
         {
+            context.Tasks.Count();
             return View();
         }
 

@@ -24,6 +24,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DbDataProvider\DbDataProvider.csproj" />
     <ProjectReference Include="..\FileDataProvider\FileDataProvider.csproj" />
   </ItemGroup>
   <ItemGroup>

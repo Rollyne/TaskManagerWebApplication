@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using DbDataProvider;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,6 +29,9 @@ namespace TaskManagerASP
             services.AddMvc();
             services.AddDistributedMemoryCache(); // Adds a default in-memory implementation of IDistributedCache
             services.AddSession();
+            services.AddDbContext<TaskManagerContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("TaskManager")));
+            services.AddScoped<ITaskManagerContext, TaskManagerContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
