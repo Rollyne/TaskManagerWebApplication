@@ -10,7 +10,7 @@
 }
 <form asp-controller="Users" asp-action="Edit" method="post">
     @{
-        var user = (FileDataProvider.Entities.User)ViewBag.User;
+        var user = (Data.Entities.Entities.User)ViewBag.User;
     }
     <input type="hidden" value="@user.Id" name="Id" required />
 

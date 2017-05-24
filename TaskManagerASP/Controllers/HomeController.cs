@@ -1,27 +1,20 @@
-﻿
-using FileDataProvider.Entities;
-using FileDataProvider.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
+using Data.Entities.Entities;
+using Data.Entities.Repositories;
 using DbDataProvider;
-using Microsoft.EntityFrameworkCore;
 using TaskManagerASP.Models;
+using TaskManagerASP.Tools;
 
 namespace TaskManagerASP.Controllers
 {
     public class HomeController : Controller
     {
-        private ITaskManagerContext context;
-        public HomeController(ITaskManagerContext context)
-        {
-            this.context = context;
-        }
-        public readonly IRepositoryProvider repositoryProvider 
-            = new FileRepositoryProvider(Configuration.GetConfig());
+        public IRepositoryProvider repositoryProvider 
+            => new RepositoryClient().GetRepositoryProvider();
         public IActionResult Index()
         {
-            context.Tasks.Count();
+            repositoryProvider.GetCommentRepository().GetAll();
             return View();
         }
 
@@ -67,8 +60,8 @@ namespace TaskManagerASP.Controllers
                 user.LastName = lastName;
 
                 var repo = repositoryProvider.GetUserRepository();
-                repo.Save(user);
-
+                repo.Add(user);
+                repo.Save();
                 return Login(username, password);
             }
             catch(ArgumentException e)

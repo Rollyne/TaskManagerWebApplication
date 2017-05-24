@@ -10,7 +10,7 @@
 }
 <form asp-controller="Tasks" asp-action="Create" method="post">
     @{ 
-        var task = (FileDataProvider.Entities.Task)ViewBag.Task;
+        var task = (Data.Entities.Entities.Task)ViewBag.Task;
     }
     <input type="hidden" value="@task.CreatorId" name="CreatorId" required/>
 

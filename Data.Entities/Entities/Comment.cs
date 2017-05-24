@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DbDataProvider.Entities
+namespace Data.Entities.Entities
 {
     public class Comment : IIdentificatable
     {

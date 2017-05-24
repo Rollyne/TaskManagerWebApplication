@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Data.Entities.Entities;
+using Data.Entities.Repositories;
+using Microsoft.Extensions.Configuration;
 
 namespace FileDataProvider.Repositories
 {
@@ -12,25 +14,25 @@ namespace FileDataProvider.Repositories
             DataPath = config["DataSettings:DataPath"];
         }
 
-        public CommentRepository GetCommentRepository(string fileName)
+        public IRepository<Comment> GetCommentRepository(string fileName)
         {
             return new CommentRepository($"{DataPath}\\{fileName}");
         }
-        public CommentRepository GetCommentRepository()
+        public IRepository<Comment> GetCommentRepository()
             => GetCommentRepository("comments.dat");
 
-        public TaskRepository GetTaskRepository(string fileName)
+        public IRepository<Task> GetTaskRepository(string fileName)
         {
             return new TaskRepository($"{DataPath}\\{fileName}");
         }
-        public TaskRepository GetTaskRepository()
+        public IRepository<Task> GetTaskRepository()
             => GetTaskRepository("tasks.dat");
 
-        public UserRepository GetUserRepository(string fileName)
+        public IRepository<User> GetUserRepository(string fileName)
         {
             return new UserRepository($"{DataPath}\\{fileName}");
         }
-        public UserRepository GetUserRepository()
+        public IRepository<User> GetUserRepository()
             => GetUserRepository("users.dat");
     }
 }

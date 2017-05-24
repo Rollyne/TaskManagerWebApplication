@@ -1,6 +1,6 @@
-﻿using System;
-using System.IO;
-using FileDataProvider.Entities;
+﻿using System.IO;
+using Data.Entities.Entities;
+using Data.Entities.Repositories;
 
 namespace FileDataProvider.Repositories
 {

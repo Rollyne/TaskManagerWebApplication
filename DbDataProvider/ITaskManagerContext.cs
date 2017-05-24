@@ -1,4 +1,4 @@
-﻿using DbDataProvider.Entities;
+﻿using Data.Entities.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DbDataProvider

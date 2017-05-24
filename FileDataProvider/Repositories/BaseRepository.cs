@@ -1,8 +1,8 @@
-﻿
-using FileDataProvider.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Data.Entities.Entities;
+using Data.Entities.Repositories;
 
 namespace FileDataProvider.Repositories
 {
@@ -159,6 +159,31 @@ namespace FileDataProvider.Repositories
                 Update(item);
             else
                 Add(item);
+        }
+
+        public ICollection<T> Where(Func<T, bool> condition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T FirstOrDefault(Func<T, bool> condition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
+        {
+            
+        }
+
+        public ICollection<T> GetAmountBySkipping(int skip, int amount, int parentId = -1)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Count()
+        {
+            return this.GetAll().Count;
         }
     }
 }

@@ -1,16 +1,22 @@
-using FileDataProvider.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Data.Entities.Entities;
+using Data.Entities.Repositories;
+using DbDataProvider;
 using TaskManagerASP.Models;
 using TaskManagerASP.Tools;
-using FileDataProvider.Repositories;
 
 namespace TaskManagerASP.Controllers
 {
     public class TasksController : BaseCRUDController<Task>
     {
-        protected override IRepository<Task> Repository 
-            => RepositoryProvider.GetRepositoryProvider().GetTaskRepository();
+        private IRepository<Task> repository;
+        public TasksController()
+        {
+            this.repository = new RepositoryClient().GetRepositoryProvider().GetTaskRepository();
+        }
+
+        protected override IRepository<Task> Repository => this.repository;
 
         protected override bool HasAccess(Task task)
         {

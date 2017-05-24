@@ -7,7 +7,21 @@
 {
     <div class="alert alert-danger">@ViewData["ErrorMessage"].ToString()</div>
 }
-    @foreach(var item in (ICollection<FileDataProvider.Entities.Task>)ViewBag.Tasks)
+
+<div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+        Items per Page
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        @foreach (var amount in TaskManagerASP.Tools.Constants.AmountOfItemsPerPage)
+        {
+            <li><a asp-controller="Tasks" asp-action="Index" asp-route-itemsPerPage="@amount" asp-route-page="@ViewData["CurrentPage"]">@amount</a></li>
+        }
+    </ul>
+</div>
+
+@foreach(var item in (ICollection<Data.Entities.Entities.Task>)ViewBag.Tasks)
     {
     <div class="panel panel-default">
         <div class="panel-body">
@@ -20,5 +34,19 @@
     </div>
     }
 
+<ul class="pagination">
+    @for (int i = 1; i <= (int)ViewData["PagesAvaliable"]; i++)
+    {
+        @if (i == (int)ViewData["CurrentPage"])
+        {
+            <li class="active"><a asp-controller="Tasks" asp-action="Index" asp-route-page="@i">@i</a></li>
+        }
+        else
+        {
+            <li><a asp-controller="Tasks" asp-action="Index" asp-route-page="@i">@i</a></li>
+        }
+
+    }
+</ul>
 <a asp-controller="Tasks" asp-action="Create" ><button class="btn btn-primary">Create new task</button></a>
 

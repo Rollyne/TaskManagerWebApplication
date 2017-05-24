@@ -10,7 +10,7 @@
 }
 <form asp-controller="Users" asp-action="Create" method="post">
     @{
-        var user = (FileDataProvider.Entities.User)ViewBag.User;
+        var user = (Data.Entities.Entities.User)ViewBag.User;
     }
 
     <div class="form-group">

@@ -1,9 +1,10 @@
 using System;
+using Data.Entities.Entities;
+using Data.Entities.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using FileDataProvider.Repositories;
 using TaskManagerASP.Models;
 using TaskManagerASP.Tools;
-using FileDataProvider.Entities;
 
 namespace TaskManagerASP.Controllers
 {
@@ -34,15 +35,27 @@ namespace TaskManagerASP.Controllers
         protected virtual bool HasAccess(TEntity task)
             => true;
 
-        public virtual IActionResult Index()
+        public virtual IActionResult Index(int? itemsPerPage, int page = 1)
         {
             if (!IsAuthorized())
             {
                 return RedirectToAction("Login", "Home");
             }
+            int itemsAmount;
+            if (itemsPerPage != null)
+            {
+                this.HttpContext.Session.SetInt32("itemsPerPage", itemsPerPage.Value);
+                itemsAmount = itemsPerPage.Value;
+            }
+            else
+            {
+                itemsAmount = this.HttpContext.Session.GetInt32("itemsPerPage") ?? Constants.DefaultItemsPerPage;
+            }
 
-            ViewData[$"{typeof(TEntity).Name}s"] = Repository.GetAll(AuthenticationManager.GetLoggedUser(HttpContext).Id);
 
+            ViewData[$"{typeof(TEntity).Name}s"] = Repository.GetAmountBySkipping((page-1)*itemsAmount, itemsAmount, AuthenticationManager.GetLoggedUser(HttpContext).Id);
+            ViewData["CurrentPage"] = page;
+            ViewData["PagesAvaliable"] = (int)Math.Ceiling((double)Repository.Count() / itemsAmount);
             return View();
         }
 
@@ -83,6 +96,7 @@ namespace TaskManagerASP.Controllers
             try
             {
                 Repository.Add(item);
+                Repository.Save();
             }
             catch (ArgumentException e)
             {
@@ -123,6 +137,7 @@ namespace TaskManagerASP.Controllers
             try
             {
                 Repository.Update(item);
+                Repository.Save();
             }
             catch(ArgumentException e)
             {
@@ -146,7 +161,15 @@ namespace TaskManagerASP.Controllers
             if (!Exists(item) || !HasAccess(item))
                 return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
 
-            Repository.Delete(item);
+            try
+            {
+                Repository.Delete(item);
+                Repository.Save();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
 
             return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
         }

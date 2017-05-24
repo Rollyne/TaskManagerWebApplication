@@ -1,5 +1,5 @@
 ﻿
-using DbDataProvider.Entities;
+using Data.Entities.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 

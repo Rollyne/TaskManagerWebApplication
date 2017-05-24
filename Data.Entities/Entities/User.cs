@@ -1,7 +1,6 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace DbDataProvider.Entities
+namespace Data.Entities.Entities
 {
     public class User : IIdentificatable
     {

@@ -1,4 +1,4 @@
-﻿namespace DbDataProvider.Entities
+﻿namespace Data.Entities.Entities
 {
     public interface IIdentificatable
     {
