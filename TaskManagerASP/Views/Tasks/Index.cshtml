@@ -1,4 +1,5 @@
 
+
 @{
     ViewData["Title"] = "Tasks";
 }
@@ -24,10 +25,26 @@
     <div class="well-sm">
         <form class="form-control" method="get" asp-controller="Tasks" asp-action="Index">
             Search By:
-            <label class="checkbox-inline"><input type="checkbox" name="header" value="true">Header</label>
-            <label class="checkbox-inline"><input type="checkbox" name="description" value="true">Description</label>
+            @if (Context.Request.Query["header"] == "true")
+            {
+                <label class="checkbox-inline"><input type="checkbox" name="header" value="true" checked>Header</label>
+            }
+            else
+            {
+                <label class="checkbox-inline"><input type="checkbox" name="header" value="true">Header</label>
+            }
+            @if (Context.Request.Query["description"] == "true")
+            {
+                <label class="checkbox-inline"><input type="checkbox" name="description" value="true" checked>Description</label>
+            }
+            else
+            {
+                <label class="checkbox-inline"><input type="checkbox" name="description" value="true">Description</label>
+            }
 
-            <input type="text" name="search" />
+            
+
+            <input type="text" name="search" value="@Context.Request.Query["search"]"/>
             <input type="submit" value="Search"/>
         </form>
     </div>
@@ -36,10 +53,21 @@
     {
     <div class="panel panel-default">
         <div class="panel-body">
+            <h3>Header</h3>
+            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.HeaderAsc}, new {@class = "glyphicon glyphicon-sort-by-alphabet"})
+            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.HeaderDesc}, new {@class = "glyphicon glyphicon-sort-by-alphabet-alt"})
             <h3 class="taskTitle">@item.Header</h3>
-            <p><small style="color: #aaa;">@item.Description</small></p>
-            <a asp-controller="Tasks" asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-info">Details</button></a>   
-            <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>   
+            <h4>Required hours</h4>
+            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.RequiredHoursAsc}, new {@class = "glyphicon glyphicon-sort-by-order"})
+            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.RequiredHoursDesc}, new {@class = "glyphicon glyphicon-sort-by-order-alt"})
+            <h4 class="taskTitle">@item.RequiredHours</h4>
+            <h4>Description</h4>
+            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.DescriptionAsc}, new {@class = "glyphicon glyphicon-sort-by-alphabet"})
+            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.DescriptionDesc}, new {@class = "glyphicon glyphicon-sort-by-alphabet-alt"})
+            <p><small style="color: #aaa;">@item.Description</small>
+            </p>
+            <a asp-controller="Tasks" asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-info">Details</button></a>
+            <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>
             <a asp-controller="Tasks" asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-danger">Delete</button></a>
         </div>
     </div>
@@ -50,11 +78,27 @@
     {
         @if (i == (int)ViewData["CurrentPage"])
         {
-            <li class="active"><a asp-controller="Tasks" asp-action="Index" asp-route-page="@i">@i</a></li>
+            <li class="active">
+                @Html.ActionLink(i.ToString(), "Index", "Tasks", new
+           {
+               header = Context.Request.Query["header"],
+               description = Context.Request.Query["description"],
+               search = Context.Request.Query["search"],
+               sort = Context.Request.Query["sort"],
+               page = i
+           })
+            </li>
         }
         else
         {
-            <li><a asp-controller="Tasks" asp-action="Index" asp-route-page="@i">@i</a></li>
+            <li>@Html.ActionLink(i.ToString(), "Index", "Tasks", new
+           {
+               header = Context.Request.Query["header"],
+               description = Context.Request.Query["description"],
+               search = Context.Request.Query["search"],
+               sort = Context.Request.Query["sort"],
+               page = i
+           })</li>
         }
 
     }

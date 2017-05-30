@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Data.Entities.Entities;
@@ -33,7 +34,12 @@ namespace TaskManagerASP.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index( int? itemsPerPage, string search = null, bool description = false, bool header = false, int page = 1)
+        public IActionResult Index( int? itemsPerPage,
+                                    string search = null,
+                                    bool description = false,
+                                    bool header = false,
+                                    int page = 1,
+                                    string sort = null)
         {
             if (!IsAuthorized())
             {
@@ -50,26 +56,61 @@ namespace TaskManagerASP.Controllers
                 itemsAmount = this.HttpContext.Session.GetInt32("itemsPerPage") ?? Constants.DefaultItemsPerPage;
             }
 
-            ICollection<Task> items = 
-                Repository.GetAll(AuthenticationManager.GetLoggedUser(HttpContext).Id);
             ICollection<Task> result = new List<Task>();
             if (header || description)
             {
                 if (header)
-                    result = items.Where(i => ((i.Header.StartsWith(search ?? "") || string.IsNullOrEmpty(search)))).ToList();
+                    result = this.Repository.Where(i => ((i.Header.StartsWith(search ?? "") || string.IsNullOrEmpty(search))) && this.HasAccess(i)).ToList();
                 if (description)
                     foreach (
                         var item in
-                        items.Where(i => (i.Description.StartsWith(search ?? "") || string.IsNullOrEmpty(search))))
+                        this.Repository.Where(i => (i.Description.StartsWith(search ?? "") || string.IsNullOrEmpty(search)) && this.HasAccess(i)))
                     {
                         result.Add(item);
                     }
             }
             else
             {
-                result = items;
+                result = this.Repository.Where(this.HasAccess);
             }
-                        
+
+            TaskOrderOptions sortOption = TaskOrderOptions.HeaderAsc;
+            
+            if(sort != null)
+                try
+                {
+                    sortOption = (TaskOrderOptions) Enum.Parse(typeof(TaskOrderOptions), sort);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+
+            switch (sortOption)
+            {
+                case TaskOrderOptions.HeaderAsc:
+                    result = result.OrderBy(i => i.Header).ToList();
+                    break;
+                case TaskOrderOptions.HeaderDesc:
+                    result = result.OrderByDescending(i => i.Header).ToList();
+                    break;
+                case TaskOrderOptions.DescriptionDesc:
+                    result = result.OrderByDescending(i => i.Description).ToList();
+                    break;
+                case TaskOrderOptions.DescriptionAsc:
+                    result = result.OrderBy(i => i.Description).ToList();
+                    break;
+                case TaskOrderOptions.RequiredHoursAsc:
+                    result = result.OrderBy(i => i.RequiredHours).ToList();
+                    break;
+                case TaskOrderOptions.RequiredHoursDesc:
+                    result = result.OrderByDescending(i => i.RequiredHours).ToList();
+                    break;
+                default:
+                    result = result.OrderBy(i => i.Header).ToList();
+                    break;
+            }
+
 
             ViewData["PagesAvaliable"] = (int)Math.Ceiling((double)result.Count / itemsAmount);
 
@@ -77,7 +118,7 @@ namespace TaskManagerASP.Controllers
                 .Take(itemsAmount)
                 .ToList();
 
-            ViewData[$"Tasks"] = result;
+            ViewData["Tasks"] = result;
             ViewData["CurrentPage"] = page;
             
             return View();
