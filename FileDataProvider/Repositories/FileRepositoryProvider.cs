@@ -34,5 +34,10 @@ namespace FileDataProvider.Repositories
         }
         public IRepository<User> GetUserRepository()
             => GetUserRepository("users.dat");
+
+        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class, IIdentificatable, new()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

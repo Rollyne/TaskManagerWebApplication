@@ -5,24 +5,22 @@
 
 <h2>Task details</h2>
 @{
-    var user = (Data.Entities.Entities.User)ViewBag.User;
+    @model TaskManagerASP.Models.UserIndexViewModel
 }
-<h4>Id</h4>
-<div class="well">@user.Id</div>
-<h4>Username</h4>
-<div class="well">@user.UserName</div>
+@Html.LabelFor(m => m.Id)
+    <div class="well">@Html.DisplayFor(m => m.Id)</div>
 
-<h4>Password</h4>
-<div class="well">@user.Password</div>
+@Html.LabelFor(m => m.Username)
+<div class="well">@Html.DisplayFor(m => m.Username)</div>
 
-<h4>First name</h4>
-<div class="well">@user.FirstName</div>
+@Html.LabelFor(m => m.FirstName, "First name")
+<div class="well">@Html.DisplayFor(m => m.FirstName)</div>
 
-<h4>Last name</h4>
-<div class="well">@user.LastName</div>
+@Html.LabelFor(m => m.LastName, "Last name")
+<div class="well">@Html.DisplayFor(m => m.LastName)</div>
 
 <h4>Admin status</h4>
-@if (user.IsAdmin)
+@if (Model.IsAdmin)
 {
     <div class="well">Administrator</div>
 }

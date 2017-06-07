@@ -1,6 +1,7 @@
 
-
+@model ICollection<TaskManagerASP.Models.TaskIndexViewModel>
 @{
+    
     ViewData["Title"] = "Tasks";
 }
 <h2>Tasks</h2>
@@ -18,7 +19,7 @@
         <ul class="dropdown-menu">
             @foreach (var amount in TaskManagerASP.Tools.Constants.AmountOfItemsPerPage)
             {
-                <li><a asp-controller="Tasks" asp-action="Index" asp-route-itemsPerPage="@amount" asp-route-page="@ViewData["CurrentPage"]">@amount</a></li>
+                <li><a asp-controller="Tasks" asp-action="Index" asp-route-itemsPerPage="@amount" asp-route-page="@Context.Request.Query["page"]"> @amount</a></li>
             }
         </ul>
     </div>
@@ -49,7 +50,7 @@
         </form>
     </div>
 </div>
-@foreach(var item in (ICollection<Data.Entities.Entities.Task>)ViewBag.Tasks)
+@foreach(var item in Model)
     {
     <div class="panel panel-default">
         <div class="panel-body">
@@ -76,7 +77,7 @@
 <ul class="pagination">
     @for (int i = 1; i <= (int)ViewData["PagesAvaliable"]; i++)
     {
-        @if (i == (int)ViewData["CurrentPage"])
+        if (i == Context.Request.Query["page"])
         {
             <li class="active">
                 @Html.ActionLink(i.ToString(), "Index", "Tasks", new

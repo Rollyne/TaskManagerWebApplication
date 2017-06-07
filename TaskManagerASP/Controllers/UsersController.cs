@@ -1,4 +1,6 @@
 
+using System;
+using System.Linq.Expressions;
 using Data.Entities.Entities;
 using Data.Entities.Repositories;
 using DbDataProvider;
@@ -7,15 +9,30 @@ using TaskManagerASP.Tools;
 
 namespace TaskManagerASP.Controllers
 {
-    public class UsersController : BaseCRUDController<User>
+    public class UsersController : BaseCRUDController<User, UserIndexViewModel>
     {
-        private IRepository<User> repository;
-        public UsersController()
+        protected override Expression<Func<User, UserIndexViewModel>> ViewModelQuery { get
         {
-            this.repository = new RepositoryClient().GetRepositoryProvider().GetUserRepository();
+            return u => new UserIndexViewModel()
+            {
+                Id = u.Id,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Username = u.UserName,
+                IsAdmin = u.IsAdmin
+            };
+        } }
+        protected override User ParseToEntity(UserIndexViewModel item)
+        {
+            return new User()
+            {
+                Id = item.Id,
+                FirstName = item.FirstName,
+                LastName = item.LastName,
+                UserName = item.Username,
+                IsAdmin = item.IsAdmin
+            };
         }
-
-        protected override IRepository<User> Repository => this.repository;
         protected override bool IsAuthorized()
         {
             if (!AuthenticationManager.GetLoggedUser(HttpContext).IsAdmin)

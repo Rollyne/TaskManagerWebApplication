@@ -5,31 +5,31 @@
 
 <h2>Task details</h2>
 @{ 
-    var task = (Data.Entities.Entities.Task)ViewBag.Task;
+    @model TaskManagerASP.Models.TaskIndexViewModel
 }
 <h4>Header:</h4>
-<div class="well">@task.Header</div>
+<div class="well">@Model.Header</div>
 
 <h4>Description</h4>
-<div class="well">@task.Description</div>
+<div class="well">@Model.Description</div>
 
 <h4>Required hours</h4>
-<div class="well">@task.RequiredHours</div>
+<div class="well">@Model.RequiredHours</div>
 
 <h4>Executitive</h4>
-<div class="well">@task.ExecutitiveId</div>
+<div class="well">@Model.ExecutitiveName</div>
 
 <h4>Creator</h4>
-<div class="well">@task.CreatorId</div>
+<div class="well">@Model.CreatorName</div>
 
 <h4>Created on</h4>
-<div class="well">@task.CreatedOn</div>
+<div class="well">@Model.CreatedOn</div>
 
 <h4>Last edited</h4>
-<div class="well">@task.LastEditedOn</div>
+<div class="well">@Model.LastEditedOn</div>
 
 <h4>Status</h4>
-@if (task.IsCompleted)
+@if (Model.IsCompleted)
 {
     <div class="well">Completed</div>
 }
@@ -41,13 +41,13 @@ else
 
 <h4>Comments</h4>
 <div class="well">
-    @await Component.InvokeAsync("Comments", new {parentId = task.Id})
+    @await Component.InvokeAsync("Comments", new {parentId = Model.Id})
 </div>
 
 <h5>Add new comment</h5>
 <div class="well">
     <form asp-action="Create" asp-controller="Comments" method="post">
-        <input type="hidden" name="TaskId" value="@task.Id" />
+        <input type="hidden" name="TaskId" value="@Model.Id" />
         <textarea class="form-control" name="Body"></textarea>
         <br/>
         <input type="submit" class="btn btn-primary" />

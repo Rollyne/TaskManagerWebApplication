@@ -1,23 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Login Page";
+    @model TaskManagerASP.Models.LoginViewModel
 }
     <div class="container" width="300">
         
-        <form asp-controller="Home" asp-action="Login" method="post">
-            <h2 class="form-signin-heading">Please log in</h2>
+       @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+       {
+           <h2 class="form-signin-heading">Please log in</h2>
 
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="alert alert-danger">@Html.ValidationMessage("authenticationFailed")</div>
-            }
+           if (!ViewData.ModelState.IsValid)
+           {
+               <div class="alert alert-danger">@Html.ValidationMessage("authenticationFailed")</div>
+           }
 
-            <label for="inputUsername" class="sr-only" style="margin:auto">Username</label>
-            <input type="text" id="inputUsername" name="username" class="form-control" style="margin:auto" placeholder="Username" required autofocus>
+           @Html.LabelFor(m => m.Username, new {@class = "sr-only"})
+           @Html.TextBoxFor(m => m.Username, new {@class = "form-control", style = "margin:auto", placeholder = "Username", required = true, autofocus = true})
 
-            <label for="inputPassword" class="sr-only" style="margin:auto">Password</label>
-            <input type="password" id="inputPassword" name="password" class="form-control" style="margin:auto" placeholder="Password" required>
 
-            <button class="btn btn-md btn-primary" style="margin:auto" type="submit">Sign in</button>
-        </form>
+           @Html.LabelFor(m => m.Password, new {@class = "sr-only"})
+           @Html.TextBoxFor(m => m.Password, new {type = "password", @class = "form-control", style = "margin:auto", placeholder = "Password", required = true})
 
+           <button class="btn btn-md btn-primary" style="margin: auto" type="submit">Sign in</button>
+       }
     </div> <!-- /container -->

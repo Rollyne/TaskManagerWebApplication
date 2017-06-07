@@ -1,29 +1,31 @@
 ﻿@{
     ViewData["Title"] = "Register Page";
+    @model Data.Entities.Entities.User
 }
 <div class="container" width="300">
-
-    <form asp-controller="Home" asp-action="Register" method="post" form="form-signin">
+    @using (Html.BeginForm("Register", "Home", FormMethod.Post, new {form = "form-signin"}))
+    {
         <h2 class="form-signin-heading">Please register</h2>
 
-        @if (!ViewData.ModelState.IsValid)
-        {
-            <div class="alert alert-danger">@Html.ValidationMessage("registrationFailed")</div>
-        }
+        if (!ViewData.ModelState.IsValid)
+         {
+             <div class="alert alert-danger">@Html.ValidationMessage("registrationFailed")</div>
+         }
 
-        <label for="inputUsername" class="sr-only" style="margin:auto">Username</label>
-        <input type="text" id="inputUsername" name="username" class="form-control" style="margin:auto" placeholder="Username" required autofocus>
+        @Html.LabelFor(m => m.UserName, new {@class = "sr-only"})
+        @Html.TextBoxFor(m => m.UserName, new {@class = "form-control", style = "margin:auto", placeholder = "Username", required = true, autofocus = true})
 
-        <label for="inputPassword" class="sr-only" style="margin:auto">Password</label>
-        <input type="password" id="inputPassword" name="password" class="form-control" style="margin:auto" placeholder="Password" required>
 
-        <label for="inputFirstName" class="sr-only" style="margin:auto">First Name</label>
-        <input type="text" id="inputFirstName" name="firstName" class="form-control" style="margin:auto" placeholder="First Name">
+        @Html.LabelFor(m => m.Password, new {@class = "sr-only"})
+        @Html.TextBoxFor(m => m.Password, new {type = "password", @class = "form-control", style = "margin:auto", placeholder = "Password", required = true})
 
-        <label for="inputLastName" class="sr-only" style="margin:auto">Last Name</label>
-        <input type="text" id="inputLastName" name="lastName" class="form-control" style="margin:auto" placeholder="Last Name">
+        @Html.LabelFor(m => m.FirstName, "First name", new {@class = "sr-only"})
+        @Html.TextBoxFor(m => m.FirstName, new {@class = "form-control", style = "margin:auto", placeholder = "First name", required=true})
 
-        <button class="btn btn-md btn-primary" style="margin:auto" type="submit">Register</button>
-    </form>
+        @Html.LabelFor(m => m.LastName, "Last name", new {@class = "sr-only"})
+        @Html.TextBoxFor(m => m.LastName, new {@class = "form-control", style = "margin:auto", placeholder = "Last name", required = true })
+
+        <button class="btn btn-md btn-primary" style="margin: auto" type="submit">Register</button>
+    }
 
 </div> <!-- /container -->

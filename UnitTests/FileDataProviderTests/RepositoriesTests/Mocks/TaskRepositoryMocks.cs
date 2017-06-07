@@ -1,9 +1,9 @@
-﻿using FileDataProvider.Entities;
-using FileDataProvider.Repositories;
+﻿using FileDataProvider.Repositories;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Data.Entities.Entities;
 using TaskManagerASP;
 
 namespace UnitTests.FileDataProviderTests.RepositoriesTests.Mocks

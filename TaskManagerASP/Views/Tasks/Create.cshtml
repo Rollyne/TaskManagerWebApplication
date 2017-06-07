@@ -8,32 +8,32 @@
 {
     <div class="alert alert-danger">@Html.ValidationMessage("CreateFailed")</div>
 }
-<form asp-controller="Tasks" asp-action="Create" method="post">
-    @{ 
-        var task = (Data.Entities.Entities.Task)ViewBag.Task;
-    }
-    <input type="hidden" value="@task.CreatorId" name="CreatorId" required/>
+@using (Html.BeginForm("Create", "Tasks", FormMethod.Post))
+{
+    @model Data.Entities.Entities.Task
+
+    @Html.HiddenFor(m => m.Id, new { required = true })
 
     <div class="form-group">
-        <label for="Header">Header</label>
-        <input type="text" name="Header" placeholder="Proper header.." required/>
+        @Html.LabelFor(m => m.Header)
+        @Html.TextBoxFor(m => m.Header, new { @class = "form-control", placeholder = "Proper header..", required = true })
     </div>
-    
+
     <div class="form-group">
-        <label for="Description">Description</label>
-        <textarea name="Description" placeholder="Detailed description.." cols="15" rows="10"></textarea>
+        @Html.LabelFor(m => m.Description)
+        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = "Detailed description.." })
     </div>
-    
+
     <div class="form-group">
-        <label for="RequiredHours">Required hours</label>
-        <input type="number" name="RequiredHours" value="1" />
+        @Html.LabelFor(m => m.RequiredHours)
+        @Html.TextBoxFor(m => m.RequiredHours, new { @class = "form-control", placeholder = "Detailed description.." })
     </div>
-    
+
     <div class="form-group">
-        <label for="ExecutitiveId">Executitive id</label>
-        <input type="number" name="ExecutitiveId" />
+        @Html.LabelFor(m => m.ExecutitiveId)
+        @Html.TextBoxFor(m => m.ExecutitiveId, new { @class = "form-control", placeholder = "Detailed description.." })
     </div>
-    
+
     <input type="submit" class="btn btn-primary" value="Create" />
-</form>
+}
 <a asp-controller="Tasks" asp-action="Index"><button class="btn btn-warning">Cancel</button></a>

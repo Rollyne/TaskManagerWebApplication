@@ -1,5 +1,5 @@
 using System;
-using FileDataProvider.Entities;
+using Data.Entities.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTests.FileDataProviderTests.EntitiesTests

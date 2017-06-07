@@ -1,6 +1,7 @@
 
 @{
     ViewData["Title"] = "Edit user";
+    @model Data.Entities.Entities.User
 }
 <h1>Edit user</h1>
 
@@ -8,41 +9,30 @@
 {
     <div class="alert alert-danger">@Html.ValidationMessage("EditFailed")</div>
 }
-<form asp-controller="Users" asp-action="Edit" method="post">
-    @{
-        var user = (Data.Entities.Entities.User)ViewBag.User;
-    }
-    <input type="hidden" value="@user.Id" name="Id" required />
 
+@using (Html.BeginForm("Edit", "Users", FormMethod.Post))
+{
     <div class="form-group">
-        <label for="UserName">Username</label>
-        <input type="text" name="UserName" placeholder="Username.." value="@user.UserName" required />
+        @Html.LabelFor(m => m.UserName, new {@class = "sr-only"})
+        @Html.EditorFor(m => m.UserName, new {@class = "form-control", style = "margin:auto", placeholder = "Username", required = true, autofocus = true})
     </div>
 
     <div class="form-group">
-        <label for="Password">Password</label>
-        <input type="text" name="Password" placeholder="Password.." value="@user.Password" required />
+        @Html.LabelFor(m => m.Password, new {@class = "sr-only"})
+        @Html.EditorFor(m => m.Password, new {type = "password", @class = "form-control", style = "margin:auto", placeholder = "Password", required = true})
     </div>
     <div class="form-group">
-        <label for="FirstName">FirstName</label>
-        <input type="text" name="FirstName" placeholder="FirstName.." value="@user.FirstName" required />
+        @Html.LabelFor(m => m.FirstName, "First name", new {@class = "sr-only"})
+        @Html.EditorFor(m => m.FirstName, new {@class = "form-control", style = "margin:auto", placeholder = "First name", required = true})
     </div>
     <div class="form-group">
-        <label for="FirstName">LastName</label>
-        <input type="text" name="LastName" placeholder="LastName.." value="@user.LastName" required />
+        @Html.LabelFor(m => m.LastName, "Last name", new {@class = "sr-only"})
+        @Html.EditorFor(m => m.LastName, new {@class = "form-control", style = "margin:auto", placeholder = "Last name", required = true})
     </div>
     <div class="form-group">
-        <label for="IsAdmin">Is administrator</label>
-        @if (user.IsAdmin)
-        {
-            <input type="checkbox" name="IsAdmin" checked />
-        }
-        else
-        {
-            <input type="checkbox" name="IsAdmin" />
-        }
-
+        @Html.LabelFor(m => m.IsAdmin, "Is admin")
+        @Html.EditorFor(m => m.IsAdmin)
     </div>
-    <input type="submit" class="btn btn-primary" value="Edit" />
-</form>
-<a asp-controller="Users" asp-action="Index"><button class="btn btn-warning">Cancel</button></a>
+    <input type="submit" class="btn btn-primary" value="Create"/>
+}
+@Html.ActionLink("Cancel", "Index", "Users", new { type = "button", @class = "btn btn-warning" })

@@ -1,11 +1,11 @@
-﻿using FileDataProvider.Entities;
+﻿using System.IO;
+using System.Reflection;
+using Data.Entities.Entities;
 using FileDataProvider.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using System.Reflection;
 using UnitTests.FileDataProviderTests.RepositoriesTests.Mocks;
 
-namespace UnitTests.FileDataProviderTests.RepositoryTests
+namespace UnitTests.FileDataProviderTests.RepositoriesTests
 {
     [TestClass]
     public class CommentRepositoryTests

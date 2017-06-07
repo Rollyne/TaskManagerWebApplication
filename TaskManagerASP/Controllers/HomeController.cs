@@ -4,17 +4,15 @@ using Data.Entities.Entities;
 using Data.Entities.Repositories;
 using DbDataProvider;
 using TaskManagerASP.Models;
+using TaskManagerASP.Services;
 using TaskManagerASP.Tools;
 
 namespace TaskManagerASP.Controllers
 {
     public class HomeController : Controller
     {
-        public IRepositoryProvider repositoryProvider 
-            => new RepositoryClient().GetRepositoryProvider();
         public IActionResult Index()
         {
-            repositoryProvider.GetCommentRepository().GetAll();
             return View();
         }
 
@@ -25,18 +23,17 @@ namespace TaskManagerASP.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string username, string password)
+        public IActionResult Login(LoginViewModel item)
         {
             var context = HttpContext;
-            AuthenticationManager.Authenticate(username, password, context);
+            AuthenticationManager.Authenticate(item.Username, item.Password, context);
 
             if(AuthenticationManager.GetLoggedUser(context) == null)
             {
                 ModelState.AddModelError("authenticationFailed", "Wrong username or password!");
+                
 
-                ViewData["username"] = username;
-
-                return View();
+                return View(item);
             }
 
             return RedirectToAction("Index", "Home");
@@ -45,32 +42,24 @@ namespace TaskManagerASP.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            return View(new User());
         }
 
         [HttpPost]
-        public IActionResult Register(string username, string password, string firstName, string lastName)
+        public IActionResult Register(User item)
         {
-            try
+            if (ModelState.IsValid)
             {
-                var user = new User();
-                user.UserName = username;
-                user.Password = password;
-                user.FirstName = firstName;
-                user.LastName = lastName;
-
-                var repo = repositoryProvider.GetUserRepository();
-                repo.Add(user);
-                repo.Save();
-                return Login(username, password);
+                new AuthenticationService().RegisterUser(item);
+                return Login(new LoginViewModel()
+                {
+                    Username = item.UserName,
+                    Password = item.Password
+                });
             }
-            catch(ArgumentException e)
-            {
-                ModelState.AddModelError("registrationFailed", e.Message);
-                return View();
-            }
+            return View(item);
         }
-        
+
         public IActionResult Logout()
         {
             if(AuthenticationManager.GetLoggedUser(HttpContext) == null)

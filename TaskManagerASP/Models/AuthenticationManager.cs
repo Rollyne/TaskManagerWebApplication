@@ -26,7 +26,7 @@ namespace TaskManagerASP.Models
                 httpContext.Session.SetObjectAsJson("LoggedUser", new AuthenticationService());
 
             authenticationService = httpContext.Session.GetObjectFromJson<AuthenticationService>("LoggedUser");
-            authenticationService.AuthenticateUser(username, password, Configuration.GetConfig());
+            authenticationService.AuthenticateUser(username, password);
 
             httpContext.Session.SetObjectAsJson("LoggedUser", authenticationService);
         }

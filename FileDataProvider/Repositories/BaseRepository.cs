@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
 using Data.Entities.Entities;
 using Data.Entities.Repositories;
 
@@ -161,29 +163,76 @@ namespace FileDataProvider.Repositories
                 Add(item);
         }
 
-        public ICollection<T> Where(Func<T, bool> condition)
-        {
-            throw new NotImplementedException();
-        }
-
-        public T FirstOrDefault(Func<T, bool> condition)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Save()
         {
             
         }
 
-        public ICollection<T> GetAmountBySkipping(int skip, int amount, int parentId = -1)
-        {
-            throw new NotImplementedException();
-        }
-
         public int Count()
         {
             return this.GetAll().Count;
+        }
+
+        public void Dispose()
+        {
+            
+        }
+
+        public ICollection<T> GetAll<TKey>(int itemsPerPage = 0, int page = 0, Expression<Func<T, bool>> @where = null, Expression<Func<T, TKey>> orderByKeySelector = null,
+            bool @descending = false)
+        {
+            var items = this.GetAll().Where(where?.Compile());
+            items = descending
+                ? items.OrderByDescending(orderByKeySelector?.Compile())
+                : items.OrderBy(orderByKeySelector?.Compile());
+            if (itemsPerPage > 0 && page > 0)
+                return items
+                    .Skip(itemsPerPage * (page - 1))
+                    .Take(itemsPerPage)
+                    .ToList();
+            else return items.ToList();
+        }
+
+        public ICollection<TResult> GetAll<TKey, TResult>(int itemsPerPage = 0, int page = 0, Expression<Func<T, bool>> @where = null,
+            Expression<Func<T, TKey>> orderByKeySelector = null, bool @descending = false, Expression<Func<T, TResult>> @select = null)
+        {
+            var items = this.GetAll().Where(where?.Compile());
+            items = descending
+                ? items.OrderByDescending(orderByKeySelector?.Compile())
+                : items.OrderBy(orderByKeySelector?.Compile());
+            var result = items.Select(select?.Compile());
+            if (itemsPerPage > 0 && page > 0)
+                return result
+                    .Skip(itemsPerPage * (page - 1))
+                    .Take(itemsPerPage)
+                    .ToList();
+            else return result.ToList();
+        }
+
+        public TResult FirstOrDefault<TResult>(Expression<Func<T, bool>> @where, Expression<Func<T, TResult>> @select = null)
+        {
+            return this.GetAll().Where(where.Compile()).Select(select?.Compile()).FirstOrDefault();
+        }
+
+        public ICollection<T> GetAll(int itemsPerPage = 0, int page = 0, Expression<Func<T, bool>> @where = null)
+        {
+            var items = this.GetAll().Where(where?.Compile());
+            if (itemsPerPage > 0 && page > 0)
+                return items
+                    .Skip(itemsPerPage * (page - 1))
+                    .Take(itemsPerPage)
+                    .ToList();
+            else return items.ToList();
+        }
+
+        public ICollection<T> GetAll()
+        {
+            return this.GetAll(-1);
+        }
+
+        public T FirstOrDefault(Func<T, bool> @where)
+        {
+            return this.GetAll().Where(where).FirstOrDefault();
         }
     }
 }

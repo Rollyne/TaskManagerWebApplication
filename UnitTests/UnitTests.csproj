@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FileDataProvider\FileDataProvider.csproj" />
+    <ProjectReference Include="..\TaskManagerASP\TaskManagerASP.csproj" />
   </ItemGroup>
 
   <ItemGroup>

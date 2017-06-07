@@ -25,5 +25,11 @@ namespace DbDataProvider.Repositories
         {
             return new Repository<Comment>(this.context);
         }
+
+        public IRepository<TEntity> GetRepository<TEntity>()
+            where TEntity : class, IIdentificatable, new()
+        {
+            return new Repository<TEntity>(this.context);
+        }
     }
 }

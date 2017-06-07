@@ -10,34 +10,33 @@
     <div class="alert alert-danger">@Html.ValidationMessage("EditFailed")</div>
 }
 
-<form asp-controller="Tasks" asp-action="Edit" method="post">
-    @{
-        var task = (Data.Entities.Entities.Task)ViewBag.Task;
-    }
-    <input type="hidden" value="@task.Id" name="Id" required/>
-    <input type="hidden" value="@task.CreatorId" name="CreatorId" />
-    <input type="hidden" value="@task.CreatedOn" name="CreatedOn" />
+@using (Html.BeginForm("Edit", "Tasks", FormMethod.Post))
+{
+    @model Data.Entities.Entities.Task
+        
+    @Html.HiddenFor(m => m.Id, new {type = "hidden", required = true})
+    @Html.HiddenFor(m => m.CreatedOn, new {type = "hidden", required = true})
 
     <div class="form-group">
-        <label for="Header">Header</label>
-        <input type="text" name="Header" class="form-control" placeholder="Proper header.." value="@task.Header" required/>
+        @Html.LabelFor(m => m.Header)
+        @Html.EditorFor(m => m.Header, new {@class = "form-control", placeholder = "Proper header..", required = true})
     </div>
 
     <div class="form-group">
-        <label for="Description">Description</label>
-        <textarea name="Description" class="form-control" placeholder="Detailed description.." cols="15" rows="10">@task.Description</textarea>
+        @Html.LabelFor(m => m.Description)
+        @Html.TextAreaFor(m => m.Description, new {@class = "form-control", placeholder = "Detailed description.."})
     </div>
 
     <div class="form-group">
-        <label for="RequiredHours">Required hours</label>
-        <input type="number" class="form-control" name="RequiredHours" value="@task.RequiredHours" />
+        @Html.LabelFor(m => m.RequiredHours)
+        @Html.EditorFor(m => m.RequiredHours, new {@class = "form-control", placeholder = "Detailed description.."})
     </div>
 
     <div class="form-group">
-        <label for="ExecutitiveId">Executitive id</label>
-        <input type="number" class="form-control" name="ExecutitiveId" value="@task.ExecutitiveId" />
+        @Html.LabelFor(m => m.ExecutitiveId)
+        @Html.EditorFor(m => m.ExecutitiveId, new {@class = "form-control", placeholder = "Detailed description.."})
     </div>
 
-    <input type="submit" class="btn btn-primary" value="Edit" />  
-    <a asp-controller="Tasks" asp-action="Index"><button class="btn btn-warning">Cancel</button></a>
-</form>
+    <input type="submit" class="btn btn-primary" value="Edit"/>
+}
+<a asp-controller="Tasks" asp-action="Index"><button class="btn btn-warning">Cancel</button></a>

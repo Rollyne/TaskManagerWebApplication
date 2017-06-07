@@ -1,26 +1,52 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq.Expressions;
 using Data.Entities.Entities;
-using Data.Entities.Repositories;
 using Microsoft.AspNetCore.Http;
 using TaskManagerASP.Models;
 using TaskManagerASP.Tools;
 
 namespace TaskManagerASP.Controllers
 {
-    public class TasksController : BaseCRUDController<Task>
+    public class TasksController : BaseCRUDController<Task, TaskIndexViewModel>
     {
-        private IRepository<Task> repository;
-        public TasksController()
+
+
+        protected override Expression<Func<Task, TaskIndexViewModel>> ViewModelQuery
         {
-            this.repository = new RepositoryClient().GetRepositoryProvider().GetTaskRepository();
+            get
+            {
+                return t => new TaskIndexViewModel()
+                {
+                    Id = t.Id,
+                    Header = t.Header,
+                    Description = t.Description,
+                    CreatorName = $"{t.Creator.FirstName} {t.Creator.LastName}",
+                    ExecutitiveName = $"{t.Executitive.FirstName} {t.Executitive.LastName}",
+                    RequiredHours = t.RequiredHours,
+                    CreatedOn = t.CreatedOn,
+                    LastEditedOn = t.LastEditedOn,
+                    IsCompleted = t.IsCompleted
+                };
+            }
         }
 
-        protected override IRepository<Task> Repository => this.repository;
-
+        protected override Task ParseToEntity(TaskIndexViewModel item)
+        {
+            return new Task()
+            {
+                Id = item.Id,
+                Header = item.Header,
+                Description = item.Description,
+                CreatorId = item.CreatorId,
+                ExecutitiveId = item.ExecutitiveId,
+                RequiredHours = item.RequiredHours,
+                CreatedOn = item.CreatedOn,
+                LastEditedOn = item.LastEditedOn,
+                IsCompleted = item.IsCompleted
+            };
+        }
         protected override bool HasAccess(Task task)
         {
             int parentId = AuthenticationManager.GetLoggedUser(HttpContext).Id;
@@ -56,24 +82,9 @@ namespace TaskManagerASP.Controllers
                 itemsAmount = this.HttpContext.Session.GetInt32("itemsPerPage") ?? Constants.DefaultItemsPerPage;
             }
 
-            ICollection<Task> result = new List<Task>();
-            if (header || description)
-            {
-                if (header)
-                    result = this.Repository.Where(i => ((i.Header.StartsWith(search ?? "") || string.IsNullOrEmpty(search))) && this.HasAccess(i)).ToList();
-                if (description)
-                    foreach (
-                        var item in
-                        this.Repository.Where(i => (i.Description.StartsWith(search ?? "") || string.IsNullOrEmpty(search)) && this.HasAccess(i)))
-                    {
-                        result.Add(item);
-                    }
-            }
-            else
-            {
-                result = this.Repository.Where(this.HasAccess);
-            }
 
+
+            
             TaskOrderOptions sortOption = TaskOrderOptions.HeaderAsc;
             
             if(sort != null)
@@ -86,59 +97,61 @@ namespace TaskManagerASP.Controllers
                     // ignored
                 }
 
+            Expression<Func<Task, dynamic>> order = null;
+            var descending = false;
             switch (sortOption)
             {
                 case TaskOrderOptions.HeaderAsc:
-                    result = result.OrderBy(i => i.Header).ToList();
+                    order = i => i.Header;
                     break;
                 case TaskOrderOptions.HeaderDesc:
-                    result = result.OrderByDescending(i => i.Header).ToList();
+                    order = i => i.Header;
+                    descending = true;
                     break;
                 case TaskOrderOptions.DescriptionDesc:
-                    result = result.OrderByDescending(i => i.Description).ToList();
+                    order = i => i.Description;
+                    descending = true;
                     break;
                 case TaskOrderOptions.DescriptionAsc:
-                    result = result.OrderBy(i => i.Description).ToList();
+                    order = i => i.Description;
                     break;
                 case TaskOrderOptions.RequiredHoursAsc:
-                    result = result.OrderBy(i => i.RequiredHours).ToList();
+                    order = i => i.RequiredHours;
                     break;
                 case TaskOrderOptions.RequiredHoursDesc:
-                    result = result.OrderByDescending(i => i.RequiredHours).ToList();
+                    order = i => i.RequiredHours;
+                    descending = true;
                     break;
-                default:
-                    result = result.OrderBy(i => i.Header).ToList();
-                    break;
+            }
+            ICollection<TaskIndexViewModel> result = new List<TaskIndexViewModel>();
+            using (var repo = base.GetRepository())
+            {
+                result =
+                    repo.GetAll(
+                        where: i =>
+                            (header
+                                ? i.Header.StartsWith(search)
+                                : i.Description.StartsWith(search))
+                            && this.HasAccess(i),
+                        orderByKeySelector: order,
+                        descending: descending,
+                        page: page,
+                        itemsPerPage: itemsAmount,
+                        select: this.ViewModelQuery
+                        );
             }
 
 
             ViewData["PagesAvaliable"] = (int)Math.Ceiling((double)result.Count / itemsAmount);
-
-            result = result.Skip((page - 1) * itemsAmount)
-                .Take(itemsAmount)
-                .ToList();
-
-            ViewData["Tasks"] = result;
-            ViewData["CurrentPage"] = page;
             
-            return View();
-        }
-
-        [HttpGet]
-        public override IActionResult Create()
-        {
-            var task = new Task();
-
-            task.CreatorId = AuthenticationManager.GetLoggedUser(HttpContext).Id;
-            ViewData["Task"] = task;
-
-            return base.Create();
+            return View(result);
         }
         [HttpPost]
         public override IActionResult Create(Task task)
         {
             task.CreatedOn = DateTime.Now;
             task.LastEditedOn = DateTime.Now;
+            task.CreatorId = AuthenticationManager.GetLoggedUser(HttpContext).Id;
 
             return base.Create(task);
         }

@@ -20,16 +20,20 @@ namespace TaskManagerASP.Services
         }
 
         public User LoggedUser { get; set; }
-        public void AuthenticateUser(string userName, string password, IConfiguration config)
+        public void AuthenticateUser(string userName, string password)
         {
             if(_repo == default(IRepository<User>))
-                _repo = new RepositoryClient().GetRepositoryProvider().GetUserRepository();
-            LoggedUser = _repo.FirstOrDefault(u => u.UserName == userName && u.Password == password);
+                _repo = new RepositoryClient().GetRepositoryProvider().GetRepository<User>();
+            LoggedUser = _repo.FirstOrDefault(where: u => u.UserName == userName && u.Password == password);
         }
 
-        public void GetBy(string username, string password, object p)
+        public void RegisterUser(User item)
         {
-            throw new NotImplementedException();
+            if (_repo == default(IRepository<User>))
+                _repo = new RepositoryClient().GetRepositoryProvider().GetRepository<User>();
+            
+            _repo.Add(item);
+            _repo.Save();
         }
     }
 }

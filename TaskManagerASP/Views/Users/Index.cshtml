@@ -1,24 +1,23 @@
 ﻿
 @{
     ViewData["Title"] = "User Administration Pannel";
+    @model ICollection<TaskManagerASP.Models.UserIndexViewModel>
 }
 <h2>User Administration Pannel</h2>
 @if (ViewData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
 }
-@foreach (var item in (ICollection<Data.Entities.Entities.User>)ViewBag.Users)
+@foreach (var item in Model)
 {
     <div class="panel panel-default">
         <div class="panel-body">
-            <h3 class="taskTitle">@item.UserName</h3>
-            <p><small style="color: #aaa;">@item.FirstName @item.LastName</small></p>
-            <a asp-controller="Users" asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-info">Details</button></a>
-            <a asp-controller="Users" asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>
-            <a asp-controller="Users" asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-danger">Delete</button></a>
+            <h3 class="taskTitle">@Html.DisplayFor(m => item.Username)</h3>
+            <p><small style="color: #aaa;">@Html.DisplayFor(m => item.FirstName) @Html.DisplayFor(m => item.LastName)</small></p>
+            @Html.ActionLink("Details", "Details", "Users", new { id = item.Id, @class = "btn btn-info", type = "button" }))
+            @Html.ActionLink("Edit", "Edit", "Users", new { id = item.Id, @class = "btn btn-warning", type = "button" }))
+            @Html.ActionLink("Delete", "Delete", "Users", new {id=item.Id, @class="btn btn-danger", type="button"}))
         </div>
     </div>
 }
-
-<a asp-controller="Users" asp-action="Create"><button class="btn btn-primary">Create new task</button></a>
-
+@Html.ActionLink("Create new user", "Create", "Users", new { @class = "btn btn-info", type = "button" }))

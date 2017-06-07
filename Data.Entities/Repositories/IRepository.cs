@@ -1,15 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Data.Entities.Repositories
 {
-    public interface IRepository<T>
+    public interface IRepository<T> : IDisposable
     {
         void Add(T item);
-
-        T GetById(int id);
-        ICollection<T> GetAll(int parentId = -1);
-        ICollection<T> GetAmountBySkipping(int skip, int amount, int parentId = -1);
+        ICollection<T> GetAll();
+        ICollection<T> GetAll(
+            int itemsPerPage = 0,
+            int page = 0,
+            Expression<Func<T, bool>> where = null);
+        ICollection<T> GetAll<TKey>(
+            int itemsPerPage = 0,
+            int page = 0,
+            Expression<Func<T, bool>> where = null,
+            Expression<Func<T, TKey>> orderByKeySelector = null,
+            bool descending = false);
+        ICollection<TResult> GetAll<TKey, TResult>(
+            int itemsPerPage = 0,
+            int page = 0,
+            Expression<Func<T, bool>> where = null,
+            Expression<Func<T, TKey>> orderByKeySelector = null,
+            bool descending = false,
+            Expression<Func<T, TResult>> select = null);
 
         int Count();
 
@@ -17,9 +32,11 @@ namespace Data.Entities.Repositories
 
         void Delete(T item);
 
-        ICollection<T> Where(Func<T, bool> condition);
+        T FirstOrDefault(Func<T, bool> where);
 
-        T FirstOrDefault(Func<T, bool> condition);
+        TResult FirstOrDefault<TResult>(
+            Expression<Func<T, bool>> where,
+            Expression<Func<T, TResult>> select = null);
 
         void Save();
     }

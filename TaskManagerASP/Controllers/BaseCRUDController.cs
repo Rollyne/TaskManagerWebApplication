@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using Data.Entities.Entities;
 using Data.Entities.Repositories;
+using DbDataProvider.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerASP.Models;
@@ -8,10 +11,16 @@ using TaskManagerASP.Tools;
 
 namespace TaskManagerASP.Controllers
 {
-    public abstract class BaseCRUDController<TEntity> : Controller
-        where TEntity : IIdentificatable, new()
+    public abstract class BaseCRUDController<TEntity, TIndexViewModel> : Controller
+        where TEntity : class, IIdentificatable, new()
+        where TIndexViewModel : class, new()
+    
     {
-        protected abstract IRepository<TEntity> Repository { get; }
+        protected IRepository<TEntity> GetRepository()
+            => new RepositoryClient().GetRepositoryProvider().GetRepository<TEntity>();
+
+        protected abstract Expression<Func<TEntity, TIndexViewModel>> ViewModelQuery { get; }
+        protected abstract TEntity ParseToEntity(TIndexViewModel item);
 
         protected virtual bool IsAuthorized()
         {
@@ -25,12 +34,7 @@ namespace TaskManagerASP.Controllers
 
         protected virtual bool Exists(TEntity item)
         {
-            if (item == null)
-            {
-                ViewData["ErrorMessage"] = ErrorMessages.DoesNotExist(typeof(TEntity).Name.ToLower());
-                return false;
-            }
-            return true;
+            return item != null;
         }
         protected virtual bool HasAccess(TEntity task)
             => true;
@@ -39,6 +43,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
+                ModelState.AddModelError("NoAccess", "You do not have access");
                 return RedirectToAction("Login", "Home");
             }
             int itemsAmount;
@@ -52,27 +57,37 @@ namespace TaskManagerASP.Controllers
                 itemsAmount = this.HttpContext.Session.GetInt32("itemsPerPage") ?? Constants.DefaultItemsPerPage;
             }
 
+            ICollection<TIndexViewModel> model;
 
-            ViewData[$"{typeof(TEntity).Name}s"] = Repository.GetAmountBySkipping((page-1)*itemsAmount, itemsAmount, AuthenticationManager.GetLoggedUser(HttpContext).Id);
-            ViewData["CurrentPage"] = page;
-            ViewData["PagesAvaliable"] = (int)Math.Ceiling((double)Repository.Count() / itemsAmount);
-            return View();
+            using (var repo = GetRepository())
+            {
+                model = repo.GetAll<bool, TIndexViewModel>(itemsPerPage: itemsAmount, page: page, where: i => HasAccess(i),
+                    select: ViewModelQuery);
+                ViewData["PagesAvaliable"] = (int) Math.Ceiling((double) repo.Count() / itemsAmount);
+            }
+
+            return View(model);
         }
 
         public IActionResult Details(int id)
         {
             if (!IsAuthorized())
             {
+                ModelState.AddModelError("NoAccess", "You do not have access");
                 return RedirectToAction("Index", "Home");
             }
-
-            var item = Repository.GetById(id);
-
-            if (!Exists(item) || !HasAccess(item))
+            TIndexViewModel vm;
+            using (var repo = GetRepository())
+            {
+                vm = repo.FirstOrDefault(i => i.Id == id, select: ViewModelQuery);
+            }
+            var item = ParseToEntity(vm);
+            if (!Exists(item))
+                return NotFound();
+            if (!HasAccess(item))
                 return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
 
-            ViewData[typeof(TEntity).Name] = item;
-            return View();
+            return View(vm);
         }
 
         [HttpGet]
@@ -80,32 +95,31 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
+                ModelState.AddModelError("NoAccess", "You do not have access");
                 return RedirectToAction("Index", "Home");
             }
 
-            return View();
+            return View(new TEntity());
         }
         [HttpPost]
         public virtual IActionResult Create(TEntity item)
         {
             if (!IsAuthorized())
             {
+                ModelState.AddModelError("NoAccess", "You do not have access");
                 return RedirectToAction("Index", "Home");
             }
 
-            try
+            if (ModelState.IsValid)
             {
-                Repository.Add(item);
-                Repository.Save();
+                using (var repo = GetRepository())
+                {
+                    repo.Add(item);
+                    repo.Save();
+                }
+                return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
             }
-            catch (ArgumentException e)
-            {
-                ModelState.AddModelError("CreateFailed", e.Message);
-                ViewData[typeof(TEntity).Name] = item;
-                return View();
-            }
-
-            return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
+            return View(item);
         }
 
         [HttpGet]
@@ -113,17 +127,20 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
+                ModelState.AddModelError("NoAccess", "You do not have access");
                 return RedirectToAction("Index", "Home");
             }
-
-            var item = Repository.GetById(id);
-
-            if (!Exists(item) || !HasAccess(item))
+            TEntity item;
+            using (var repo = GetRepository())
+            {
+                item = repo.FirstOrDefault(i => i.Id == id);
+            }
+            if (!Exists(item))
+                return NotFound();
+            if (!HasAccess(item))
                 return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
 
-
-            ViewData[typeof(TEntity).Name] = item;
-            return View();
+            return View(item);
         }
 
         [HttpPost]
@@ -134,19 +151,18 @@ namespace TaskManagerASP.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            try
+            if (ModelState.IsValid)
             {
-                Repository.Update(item);
-                Repository.Save();
+                using (var repo = GetRepository())
+                {
+                    repo.Update(item);
+                    repo.Save();
+                }
+                return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
             }
-            catch(ArgumentException e)
-            {
-                ModelState.AddModelError("EditFailed", e.Message);
-                ViewData[typeof(TEntity).Name] = item;
-                return View();
-            }
-            
-            return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
+
+            return View(item);
+
         }
 
 
@@ -157,20 +173,26 @@ namespace TaskManagerASP.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var item = Repository.GetById(id);
-            if (!Exists(item) || !HasAccess(item))
-                return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
-
-            try
+            TEntity item;
+            using (var repo = GetRepository())
             {
-                Repository.Delete(item);
-                Repository.Save();
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+                item = repo.FirstOrDefault(i => i.Id == id);
 
+                if (!Exists(item))
+                    return NotFound();
+                if (!HasAccess(item))
+                    return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
+
+                try
+                {
+                    repo.Delete(item);
+                    repo.Save();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            }
             return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
         }
     }

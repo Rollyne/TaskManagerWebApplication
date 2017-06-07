@@ -9,13 +9,8 @@ namespace TaskManagerASP.Controllers
 {
     public class CommentsController : Controller
     {
-        private IRepository<Comment> repository;
-        public CommentsController()
-        {
-            this.repository = new RepositoryClient().GetRepositoryProvider().GetCommentRepository();
-        }
-
-        private IRepository<Comment> Repository => this.repository;
+        private IRepository<Comment> GetRepository() =>
+            new RepositoryClient().GetRepositoryProvider().GetRepository<Comment>();
 
         private bool IsAuthorized()
         {
@@ -32,7 +27,7 @@ namespace TaskManagerASP.Controllers
             var task = new RepositoryClient()
                         .GetRepositoryProvider()
                         .GetTaskRepository()
-                        .GetById(item.TaskId);
+                        .FirstOrDefault(where: t => t.Id == item.TaskId);
             int authenticatedId = AuthenticationManager.GetLoggedUser(HttpContext).Id;
             if (task.CreatorId == authenticatedId || task.ExecutitiveId == authenticatedId)
                 return true;
@@ -47,14 +42,19 @@ namespace TaskManagerASP.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+            Comment item;
+            using (var repo = GetRepository())
+            {
+                item = repo.FirstOrDefault(i => i.Id == id);
+            }
+            
+            if(!Exists(item))
+                return NotFound();
 
-            var item = Repository.GetById(id);
-
-            if (!Exists(item) || !HasAccess(item))
+            if (!HasAccess(item))
                 return RedirectToAction("Index", this.ControllerContext.RouteData.Values["controller"].ToString());
 
-            ViewData["Comment"] = item;
-            return View();
+            return View(item);
         }
 
         [HttpPost]
@@ -68,15 +68,17 @@ namespace TaskManagerASP.Controllers
             item.AuthorId = AuthenticationManager.GetLoggedUser(HttpContext).Id;
             if (HasPermissionToCommentsTask(item))
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    Repository.Update(item);
-                    Repository.Save();
+                    using (var repo = GetRepository())
+                    {
+                        repo.Update(item);
+                        repo.Save();
+                    }
                 }
-                catch (ArgumentException e)
+                else
                 {
-                    ModelState.AddModelError("EditFailed", e.Message);
-                    ViewData["Comment"] = item;
+                    return View(item);
                 }
             }
             else
@@ -84,7 +86,7 @@ namespace TaskManagerASP.Controllers
                 return RedirectToAction("Index", "Tasks");
             }
 
-            return RedirectToAction("Details", "Tasks", new {id = item.Id});
+            return RedirectToAction("Details", "Tasks", new { id = item.Id });
         }
 
         public IActionResult Delete(int id)
@@ -94,12 +96,22 @@ namespace TaskManagerASP.Controllers
                 return RedirectToAction("Login", "Home");
             }
 
-            var item = Repository.GetById(id);
-            if (!Exists(item) || !HasAccess(item))
-                return RedirectToAction("Index", "Tasks");
+            Comment item;
 
-            Repository.Delete(item);
-            Repository.Save();
+            using (var repo = GetRepository())
+            {
+                item = repo.FirstOrDefault(i => i.Id == id);
+                if (Exists(item))
+                    return NotFound();
+                if (!HasAccess(item))
+                    return RedirectToAction("Index", "Tasks");
+                if (ModelState.IsValid)
+                {
+                    repo.Delete(item);
+                    repo.Save();
+                }
+            }
+                
 
             return RedirectToAction("Details", "Tasks", new {id = item.TaskId});
         }
@@ -112,17 +124,12 @@ namespace TaskManagerASP.Controllers
                 return RedirectToAction("Login", "Home");
             }
             item.AuthorId = AuthenticationManager.GetLoggedUser(HttpContext).Id;
-            if (HasPermissionToCommentsTask(item))
+            if (HasPermissionToCommentsTask(item) && ModelState.IsValid)
             {
-                try
+                using (var repo = GetRepository())
                 {
-                    Repository.Add(item);
-                    Repository.Save();
-                }
-                catch (ArgumentException e)
-                {
-                    ModelState.AddModelError("CreateFailed", e.Message);
-                    ViewData["Comment"] = item;
+                    repo.Add(item);
+                    repo.Save();
                 }
             }
             else
