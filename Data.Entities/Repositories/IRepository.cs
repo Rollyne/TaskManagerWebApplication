@@ -7,20 +7,36 @@ namespace Data.Entities.Repositories
     public interface IRepository<T> : IDisposable
     {
         void Add(T item);
+
         ICollection<T> GetAll();
-        ICollection<T> GetAll(
-            int itemsPerPage = 0,
+
+        Tuple<List<T>, int> GetAllPaged(int itemsPerPage = 0,
             int page = 0,
             Expression<Func<T, bool>> where = null);
-        ICollection<T> GetAll<TKey>(
+
+        Tuple<List<T>,int> GetAllPaged<TKey>(
             int itemsPerPage = 0,
             int page = 0,
             Expression<Func<T, bool>> where = null,
             Expression<Func<T, TKey>> orderByKeySelector = null,
             bool descending = false);
-        ICollection<TResult> GetAll<TKey, TResult>(
+
+        Tuple<List<TResult>,int> GetAllPaged<TKey, TResult>(
             int itemsPerPage = 0,
             int page = 0,
+            Expression<Func<T, bool>> where = null,
+            Expression<Func<T, TKey>> orderByKeySelector = null,
+            bool descending = false,
+            Expression<Func<T, TResult>> select = null);
+
+        ICollection<T> GetAll<TKey>(
+            Expression<Func<T, bool>> where = null,
+            Expression<Func<T, TKey>> orderByKeySelector = null,
+            bool descending = false);
+
+        ICollection<T> GetAll(Expression<Func<T, bool>> where = null);
+
+        ICollection<TResult> GetAll<TKey, TResult>(
             Expression<Func<T, bool>> where = null,
             Expression<Func<T, TKey>> orderByKeySelector = null,
             bool descending = false,

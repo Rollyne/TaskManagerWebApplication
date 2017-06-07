@@ -8,26 +8,26 @@
     @model TaskManagerASP.Models.TaskIndexViewModel
 }
 <h4>Header:</h4>
-<div class="well">@Model.Header</div>
-
+@Html.DisplayFor(m => Model.Header, new { @class = "well" })
+<br /><br />
 <h4>Description</h4>
-<div class="well">@Model.Description</div>
-
+@Html.DisplayFor(m => Model.Description, new { @class = "well" })
+<br /><br />
 <h4>Required hours</h4>
-<div class="well">@Model.RequiredHours</div>
-
+@Html.DisplayFor(m => Model.RequiredHours, new { @class = "well" })
+<br /><br />
 <h4>Executitive</h4>
-<div class="well">@Model.ExecutitiveName</div>
-
+@Html.DisplayFor(m => Model.ExecutitiveName, new { @class = "well" })
+<br /><br />
 <h4>Creator</h4>
-<div class="well">@Model.CreatorName</div>
-
+@Html.DisplayFor(m => Model.CreatorName, new { @class = "well" })
+<br /><br />
 <h4>Created on</h4>
-<div class="well">@Model.CreatedOn</div>
-
+@Html.DisplayFor(m => Model.CreatedOn, new { @class = "well" })
+<br /><br />
 <h4>Last edited</h4>
-<div class="well">@Model.LastEditedOn</div>
-
+@Html.DisplayFor(m => Model.LastEditedOn, new { @class = "well" })
+<br /><br />
 <h4>Status</h4>
 @if (Model.IsCompleted)
 {
@@ -45,14 +45,15 @@ else
 </div>
 
 <h5>Add new comment</h5>
-<div class="well">
-    <form asp-action="Create" asp-controller="Comments" method="post">
-        <input type="hidden" name="TaskId" value="@Model.Id" />
-        <textarea class="form-control" name="Body"></textarea>
-        <br/>
-        <input type="submit" class="btn btn-primary" />
-    </form>
-    
-</div>
+    <div class="well">
+        @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+        {
+            @Html.Hidden("TaskId", Model.Id)
+            @Html.TextArea("Body", new {@class="form-control"})
+            <br/>
+            <input type="submit" class="btn btn-primary"/>
+        }
+
+    </div>
 
 

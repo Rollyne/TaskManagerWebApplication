@@ -24,6 +24,8 @@ namespace TaskManagerASP.Controllers
                     Description = t.Description,
                     CreatorName = $"{t.Creator.FirstName} {t.Creator.LastName}",
                     ExecutitiveName = $"{t.Executitive.FirstName} {t.Executitive.LastName}",
+                    CreatorId = t.CreatorId,
+                    ExecutitiveId = t.ExecutitiveId,
                     RequiredHours = t.RequiredHours,
                     CreatedOn = t.CreatedOn,
                     LastEditedOn = t.LastEditedOn,
@@ -54,7 +56,6 @@ namespace TaskManagerASP.Controllers
             {
                 return true;
             }
-            ViewData["ErrorMessage"] = ErrorMessages.NoAccess("task");
             return false;
            
         }
@@ -123,28 +124,38 @@ namespace TaskManagerASP.Controllers
                     descending = true;
                     break;
             }
-            ICollection<TaskIndexViewModel> result = new List<TaskIndexViewModel>();
+            int parentId = AuthenticationManager.GetLoggedUser(HttpContext).Id;
+            Expression<Func<Task, bool>> where = t => (t.CreatorId == parentId || t.ExecutitiveId == parentId);
+            if (!string.IsNullOrEmpty(search))
+            {
+                if (header && description)
+                    where = t => t.Header.StartsWith(search) || t.Description.StartsWith(search) && (t.CreatorId == parentId || t.ExecutitiveId == parentId);
+                else if (header)
+                    where = t => t.Header.StartsWith(search) && (t.CreatorId == parentId || t.ExecutitiveId == parentId);
+                else if(description)
+                    where = t => t.Description.StartsWith(search) && (t.CreatorId == parentId || t.ExecutitiveId == parentId);
+            }
+            ICollection<TaskIndexViewModel> model = new List<TaskIndexViewModel>();
+            int itemsAvaliable;
             using (var repo = base.GetRepository())
             {
-                result =
-                    repo.GetAll(
-                        where: i =>
-                            (header
-                                ? i.Header.StartsWith(search)
-                                : i.Description.StartsWith(search))
-                            && this.HasAccess(i),
+                var result =
+                    repo.GetAllPaged(
+                        where: where,
                         orderByKeySelector: order,
                         descending: descending,
                         page: page,
                         itemsPerPage: itemsAmount,
                         select: this.ViewModelQuery
                         );
+                model = result.Item1;
+                itemsAvaliable = result.Item2;
             }
 
-
-            ViewData["PagesAvaliable"] = (int)Math.Ceiling((double)result.Count / itemsAmount);
+            ViewData["CurrentPage"] = page;
+            ViewData["PagesAvaliable"] = (int)Math.Ceiling((double)itemsAvaliable / itemsAmount);
             
-            return View(result);
+            return View(model);
         }
         [HttpPost]
         public override IActionResult Create(Task task)

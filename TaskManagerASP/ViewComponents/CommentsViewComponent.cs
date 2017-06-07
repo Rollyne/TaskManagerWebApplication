@@ -7,17 +7,15 @@ namespace TaskManagerASP.ViewComponents
 {
     public class CommentsViewComponent : ViewComponent
     {
-        private IRepository<Comment> repository;
-        public CommentsViewComponent()
-        {
-            this.repository = new RepositoryClient().GetRepositoryProvider().GetCommentRepository();
-        }
-
-        private IRepository<Comment> Repository => this.repository;
+        private IRepository<Comment> GetRepository() =>
+            new RepositoryClient().GetRepositoryProvider().GetRepository<Comment>();
 
         public IViewComponentResult Invoke(int parentId)
         {
-            return View(Repository.GetAll(parentId));
+            using (var repo = GetRepository())
+            {
+                return View(repo.GetAll(where: i => i.TaskId == parentId));
+            }
         }
     }
 }

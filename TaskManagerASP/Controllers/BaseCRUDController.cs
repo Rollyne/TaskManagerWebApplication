@@ -58,13 +58,15 @@ namespace TaskManagerASP.Controllers
             }
 
             ICollection<TIndexViewModel> model;
-
+            int itemsAvaliable;
             using (var repo = GetRepository())
             {
-                model = repo.GetAll<bool, TIndexViewModel>(itemsPerPage: itemsAmount, page: page, where: i => HasAccess(i),
+                var result = repo.GetAllPaged<bool,TIndexViewModel>(itemsPerPage: itemsAmount, page: page, where: i => HasAccess(i),
                     select: ViewModelQuery);
-                ViewData["PagesAvaliable"] = (int) Math.Ceiling((double) repo.Count() / itemsAmount);
+                model = result.Item1;
+                itemsAvaliable = result.Item2;
             }
+            ViewData["PagesAvaliable"] = (int)Math.Ceiling((double)itemsAvaliable / itemsAmount);
 
             return View(model);
         }

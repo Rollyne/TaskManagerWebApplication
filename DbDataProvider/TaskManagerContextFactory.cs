@@ -7,7 +7,6 @@ namespace DbDataProvider
 {
     public class TaskManagerContextFactory : IDbContextFactory<TaskManagerContext>
     {
-
         public TaskManagerContext Create(DbContextFactoryOptions options = null)
         {
             return Create("Data Source=DESKTOP-EVCUSNQ;Initial Catalog=TaskManager;Integrated Security=True");

@@ -4,9 +4,9 @@
 {
     if (comment.AuthorId == TaskManagerASP.Models.AuthenticationManager.GetLoggedUser(Context).Id)
     {
-        <a class="glyphicon glyphicon-pencil" asp-controller="Comments" asp-action="Edit" asp-route-id="@comment.Id"></a>
-        <a class="glyphicon glyphicon-trash" asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id"></a>
+        @Html.ActionLink("", "Edit", "Comments", new { id = comment.Id}, new { @class = "glyphicon glyphicon-pencil"})
+        @Html.ActionLink("", "Delete", "Comments", new {id = comment.Id}, new {@class = "glyphicon glyphicon-trash"})
     }
-    <div class="well">@comment.Body</div>
+    @Html.DisplayFor(m => comment.Body, new { @class="well"})
 }
 

@@ -234,5 +234,38 @@ namespace FileDataProvider.Repositories
         {
             return this.GetAll().Where(where).FirstOrDefault();
         }
+
+        public Tuple<List<T>, int> GetAllPaged(int itemsPerPage = 0, int page = 0, Expression<Func<T, bool>> @where = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Tuple<List<T>, int> GetAllPaged<TKey>(int itemsPerPage = 0, int page = 0, Expression<Func<T, bool>> @where = null,
+            Expression<Func<T, TKey>> orderByKeySelector = null, bool @descending = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Tuple<List<TResult>, int> GetAllPaged<TKey, TResult>(int itemsPerPage = 0, int page = 0, Expression<Func<T, bool>> @where = null,
+            Expression<Func<T, TKey>> orderByKeySelector = null, bool @descending = false, Expression<Func<T, TResult>> @select = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<T> GetAll<TKey>(Expression<Func<T, bool>> @where = null, Expression<Func<T, TKey>> orderByKeySelector = null, bool @descending = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<T> GetAll(Expression<Func<T, bool>> @where = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICollection<TResult> GetAll<TKey, TResult>(Expression<Func<T, bool>> @where = null, Expression<Func<T, TKey>> orderByKeySelector = null,
+            bool @descending = false, Expression<Func<T, TResult>> @select = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

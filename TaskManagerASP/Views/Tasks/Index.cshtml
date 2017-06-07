@@ -19,7 +19,7 @@
         <ul class="dropdown-menu">
             @foreach (var amount in TaskManagerASP.Tools.Constants.AmountOfItemsPerPage)
             {
-                <li><a asp-controller="Tasks" asp-action="Index" asp-route-itemsPerPage="@amount" asp-route-page="@Context.Request.Query["page"]"> @amount</a></li>
+                <li>@Html.ActionLink(amount.ToString(), "Index", "Tasks", new { page = ViewData["CurrentPage"] })</li>
             }
         </ul>
     </div>
@@ -50,26 +50,41 @@
         </form>
     </div>
 </div>
+<ul>
+    Order by
+    <li>
+        Header:
+        @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.HeaderAsc}, new {@class = "glyphicon glyphicon-sort-by-alphabet"})
+        @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.HeaderDesc}, new {@class = "glyphicon glyphicon-sort-by-alphabet-alt"})
+    </li>
+    <li>
+        Description:
+        @Html.ActionLink("", "Index", "Tasks", new { sort = TaskManagerASP.Tools.TaskOrderOptions.DescriptionAsc }, new { @class = "glyphicon glyphicon-sort-by-alphabet" })
+        @Html.ActionLink("", "Index", "Tasks", new { sort = TaskManagerASP.Tools.TaskOrderOptions.DescriptionDesc }, new { @class = "glyphicon glyphicon-sort-by-alphabet-alt" })
+    </li>
+    <li>
+        Required hours:
+        @Html.ActionLink("", "Index", "Tasks", new { sort = TaskManagerASP.Tools.TaskOrderOptions.RequiredHoursAsc }, new { @class = "glyphicon glyphicon-sort-by-order" })
+        @Html.ActionLink("", "Index", "Tasks", new { sort = TaskManagerASP.Tools.TaskOrderOptions.RequiredHoursDesc }, new { @class = "glyphicon glyphicon-sort-by-order-alt" })
+    </li>
+</ul>
 @foreach(var item in Model)
     {
     <div class="panel panel-default">
         <div class="panel-body">
             <h3>Header</h3>
-            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.HeaderAsc}, new {@class = "glyphicon glyphicon-sort-by-alphabet"})
-            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.HeaderDesc}, new {@class = "glyphicon glyphicon-sort-by-alphabet-alt"})
-            <h3 class="taskTitle">@item.Header</h3>
-            <h4>Required hours</h4>
-            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.RequiredHoursAsc}, new {@class = "glyphicon glyphicon-sort-by-order"})
-            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.RequiredHoursDesc}, new {@class = "glyphicon glyphicon-sort-by-order-alt"})
-            <h4 class="taskTitle">@item.RequiredHours</h4>
-            <h4>Description</h4>
-            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.DescriptionAsc}, new {@class = "glyphicon glyphicon-sort-by-alphabet"})
-            @Html.ActionLink("", "Index", "Tasks", new {sort = TaskManagerASP.Tools.TaskOrderOptions.DescriptionDesc}, new {@class = "glyphicon glyphicon-sort-by-alphabet-alt"})
-            <p><small style="color: #aaa;">@item.Description</small>
-            </p>
-            <a asp-controller="Tasks" asp-action="Details" asp-route-id="@item.Id"><button class="btn btn-info">Details</button></a>
-            <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@item.Id"><button class="btn btn-warning">Edit</button></a>
-            <a asp-controller="Tasks" asp-action="Delete" asp-route-id="@item.Id"><button class="btn btn-danger">Delete</button></a>
+            
+            @Html.LabelFor(m => item.Header)<br />
+            @Html.DisplayFor(m => item.Header)
+            <hr />
+            @Html.LabelFor(m => item.RequiredHours)<br/>
+            @Html.DisplayFor(m => item.RequiredHours)
+            <hr />
+            @Html.LabelFor(m => item.Description)<br />
+            <small style="color: #aaa;">@Html.DisplayFor(m => item.Description)</small><br /><br />
+            @Html.ActionLink("Details", "Details", "Tasks", new { id = item.Id}, new{ @class = "btn btn-info" })
+            @Html.ActionLink("Edit", "Edit", "Tasks", new { id = item.Id}, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Delete", "Delete", "Tasks", new {id=item.Id }, new { @class = "btn btn-danger", type = "button" })
         </div>
     </div>
     }
@@ -77,7 +92,7 @@
 <ul class="pagination">
     @for (int i = 1; i <= (int)ViewData["PagesAvaliable"]; i++)
     {
-        if (i == Context.Request.Query["page"])
+        if (i == (int)ViewData["CurrentPage"])
         {
             <li class="active">
                 @Html.ActionLink(i.ToString(), "Index", "Tasks", new

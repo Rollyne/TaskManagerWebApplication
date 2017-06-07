@@ -20,6 +20,7 @@ namespace DbDataProvider
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             modelBuilder.Entity<User>().HasMany(u => u.TasksToDo)
                 .WithOne(t => t.Executitive)
                 .HasForeignKey(t => t.ExecutitiveId)
@@ -29,6 +30,18 @@ namespace DbDataProvider
                 .WithOne(t => t.Creator)
                 .HasForeignKey(t => t.CreatorId)
                 .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        public void Seed()
+        {
+            this.Users.Add(new User()
+            {
+                UserName = "nikiv",
+                Password = "nikipass",
+                FirstName = "Nikola",
+                LastName = "Valchanov",
+                IsAdmin = true
+            });
         }
     }
 }

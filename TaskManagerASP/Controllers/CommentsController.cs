@@ -86,7 +86,7 @@ namespace TaskManagerASP.Controllers
                 return RedirectToAction("Index", "Tasks");
             }
 
-            return RedirectToAction("Details", "Tasks", new { id = item.Id });
+            return RedirectToAction("Details", "Tasks", new { id = item.TaskId });
         }
 
         public IActionResult Delete(int id)
@@ -101,7 +101,7 @@ namespace TaskManagerASP.Controllers
             using (var repo = GetRepository())
             {
                 item = repo.FirstOrDefault(i => i.Id == id);
-                if (Exists(item))
+                if (!Exists(item))
                     return NotFound();
                 if (!HasAccess(item))
                     return RedirectToAction("Index", "Tasks");

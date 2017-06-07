@@ -1,16 +1,16 @@
-
 @{
     ViewData["Title"] = "Edit comment";
-    var item = (Data.Entities.Entities.Comment)ViewData["Comment"];
 }
 
 <h2>Edit</h2>
-<form asp-action="Edit" asp-controller="Comments" method="post">
-    <input type="hidden" name="TaskId" value="@item.TaskId" />
-    <input type="hidden" name="Id" value="@item.Id" />
 
-    <textarea class="form-control" name="Body">@item.Body</textarea>
-    <br />
-    <input type="submit" class="btn btn-primary" />
-</form>
+ @using (Html.BeginForm("Edit", "Comments"))
+ {
+     @model Data.Entities.Entities.Comment
+     @Html.HiddenFor(m => m.TaskId)
+     @Html.HiddenFor(m => m.Id)
+     @Html.TextAreaFor(m => m.Body, new {@class = "form-control"})
+     <br/>
+     <input type="submit" class="btn btn-primary"/>
+ }
 
