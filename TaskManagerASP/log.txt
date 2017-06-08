@@ -1,0 +1,10 @@
+Blqblq was called at 08/06/2017 18:44:56
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 08/06/2017 18:44:57 for 00:00:01.3805314
+Blqblq was called at 08/06/2017 18:45:45
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 08/06/2017 18:45:45 for 00:00:00.0657166
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was called at 08/06/2017 18:49:28
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 08/06/2017 18:49:29.It took 00:00:01.2783434
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was called at 08/06/2017 18:49:51
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 08/06/2017 18:49:51.It took 00:00:00.0605930
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was called at 08/06/2017 18:50:02
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 08/06/2017 18:50:02.It took 00:00:00.0343941

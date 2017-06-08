@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Data.Entities.Entities;
 using Microsoft.AspNetCore.Http;
+using TaskManagerASP.Filters;
 using TaskManagerASP.Models;
 using TaskManagerASP.Tools;
 
@@ -60,6 +61,7 @@ namespace TaskManagerASP.Controllers
            
         }
 
+        [Log]
         [HttpGet]
         public IActionResult Index( int? itemsPerPage,
                                     string search = null,
