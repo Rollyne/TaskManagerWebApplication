@@ -3,7 +3,10 @@
 }
 
 <h2>Edit</h2>
-
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">@Html.ValidationSummary()</div>
+}
  @using (Html.BeginForm("Edit", "Comments"))
  {
      @model Data.Entities.Entities.Comment

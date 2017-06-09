@@ -10,7 +10,7 @@
 
            if (!ViewData.ModelState.IsValid)
            {
-               <div class="alert alert-danger">@Html.ValidationMessage("authenticationFailed")</div>
+            <div class="alert alert-danger">@Html.ValidationSummary()</div>
            }
 
            @Html.LabelFor(m => m.Username, new {@class = "sr-only"})

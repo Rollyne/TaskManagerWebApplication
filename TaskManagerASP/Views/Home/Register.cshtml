@@ -8,9 +8,9 @@
         <h2 class="form-signin-heading">Please register</h2>
 
         if (!ViewData.ModelState.IsValid)
-         {
-             <div class="alert alert-danger">@Html.ValidationMessage("registrationFailed")</div>
-         }
+        {
+            <div class="alert alert-danger">@Html.ValidationSummary()</div>
+        }
 
         @Html.LabelFor(m => m.UserName, new {@class = "sr-only"})
         @Html.TextBoxFor(m => m.UserName, new {@class = "form-control", style = "margin:auto", placeholder = "Username", required = true, autofocus = true})

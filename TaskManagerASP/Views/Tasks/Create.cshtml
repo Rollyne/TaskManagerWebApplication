@@ -6,7 +6,7 @@
 
 @if (!ViewData.ModelState.IsValid)
 {
-    <div class="alert alert-danger">@Html.ValidationMessage("CreateFailed")</div>
+    <div class="alert alert-danger">@Html.ValidationSummary()</div>
 }
 @using (Html.BeginForm("Create", "Tasks", FormMethod.Post))
 {

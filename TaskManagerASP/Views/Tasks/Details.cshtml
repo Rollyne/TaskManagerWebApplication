@@ -45,15 +45,19 @@ else
 </div>
 
 <h5>Add new comment</h5>
-    <div class="well">
-        @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
-        {
-            @Html.Hidden("TaskId", Model.Id)
-            @Html.TextArea("Body", new {@class="form-control"})
-            <br/>
-            <input type="submit" class="btn btn-primary"/>
-        }
+<div class="well">
 
-    </div>
+    @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+    {
+        @Html.Hidden("TaskId", Model.Id)
+        @Html.TextArea("Body", new { @class = "form-control" })
+        <br />
+            <input type="submit" class="btn btn-primary" />
+    }
+
+</div>
+
+
+
 
 

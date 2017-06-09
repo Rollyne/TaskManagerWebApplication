@@ -1,6 +1,7 @@
 ﻿using Data.Entities.Entities;
 using Data.Entities.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using TaskManagerASP.Models;
 using TaskManagerASP.Tools;
 
 namespace TaskManagerASP.ViewComponents
@@ -17,5 +18,6 @@ namespace TaskManagerASP.ViewComponents
                 return View(repo.GetAll(where: i => i.TaskId == parentId));
             }
         }
+
     }
 }

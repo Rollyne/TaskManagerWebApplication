@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace TaskManagerASP.Tools
+namespace TaskManagerASP.Extensions
 {
     public static class SessionExtensions
     {

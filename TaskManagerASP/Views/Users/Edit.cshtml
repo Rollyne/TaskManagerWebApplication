@@ -7,7 +7,7 @@
 
 @if (!ViewData.ModelState.IsValid)
 {
-    <div class="alert alert-danger">@Html.ValidationMessage("EditFailed")</div>
+    <div class="alert alert-danger">@Html.ValidationSummary()</div>
 }
 
 @using (Html.BeginForm("Edit", "Users", FormMethod.Post))

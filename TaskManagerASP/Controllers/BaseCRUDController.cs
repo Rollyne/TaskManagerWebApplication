@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Data.Entities.Entities;
 using Data.Entities.Repositories;
-using DbDataProvider.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagerASP.Models;
@@ -43,7 +42,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                ModelState.AddModelError("NoAccess", "You do not have access");
+                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
                 return RedirectToAction("Login", "Home");
             }
             int itemsAmount;
@@ -75,7 +74,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                ModelState.AddModelError("NoAccess", "You do not have access");
+                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
                 return RedirectToAction("Index", "Home");
             }
             TIndexViewModel vm;
@@ -97,7 +96,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                ModelState.AddModelError("NoAccess", "You do not have access");
+                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
                 return RedirectToAction("Index", "Home");
             }
 
@@ -108,7 +107,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                ModelState.AddModelError("NoAccess", "You do not have access");
+                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
                 return RedirectToAction("Index", "Home");
             }
 
@@ -129,7 +128,7 @@ namespace TaskManagerASP.Controllers
         {
             if (!IsAuthorized())
             {
-                ModelState.AddModelError("NoAccess", "You do not have access");
+                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
                 return RedirectToAction("Index", "Home");
             }
             TEntity item;
