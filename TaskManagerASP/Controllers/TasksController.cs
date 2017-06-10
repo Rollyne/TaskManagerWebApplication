@@ -70,10 +70,10 @@ namespace TaskManagerASP.Controllers
                                     int page = 1,
                                     string sort = null)
         {
-            if (!IsAuthorized())
-            {
-                return RedirectToAction("Login", "Home");
-            }
+            //if (!IsAuthorized())
+            //{
+            //    return RedirectToAction("Login", "Home");
+            //}
             int itemsAmount;
             if (itemsPerPage != null)
             {

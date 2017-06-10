@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using Data.Entities.Entities;
-using Data.Entities.Repositories;
-using DbDataProvider;
+using TaskManagerASP.Filters;
 using TaskManagerASP.Models;
 using TaskManagerASP.Services;
-using TaskManagerASP.Tools;
 
 namespace TaskManagerASP.Controllers
 {
@@ -16,7 +13,6 @@ namespace TaskManagerASP.Controllers
            
             return View();
         }
-
         [HttpGet]
         public IActionResult Login()
         {

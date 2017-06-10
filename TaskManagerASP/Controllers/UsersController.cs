@@ -2,13 +2,13 @@
 using System;
 using System.Linq.Expressions;
 using Data.Entities.Entities;
-using Data.Entities.Repositories;
-using DbDataProvider;
+using TaskManagerASP.Filters;
 using TaskManagerASP.Models;
 using TaskManagerASP.Tools;
 
 namespace TaskManagerASP.Controllers
 {
+    [Authorize(ShouldBeAdmin = true)]
     public class UsersController : BaseCRUDController<User, UserIndexViewModel>
     {
         protected override Expression<Func<User, UserIndexViewModel>> ViewModelQuery { get
@@ -33,14 +33,14 @@ namespace TaskManagerASP.Controllers
                 IsAdmin = item.IsAdmin
             };
         }
-        protected override bool IsAuthorized()
-        {
-            if (!AuthenticationManager.GetLoggedUser(HttpContext).IsAdmin)
-            {
-                ViewData["ErrorMessage"] = ErrorMessages.ShouldBeAdmin;
-                return false;
-            }
-            return base.IsAuthorized();
-        }
+        //protected override bool IsAuthorized()
+        //{
+        //    if (!AuthenticationManager.GetLoggedUser(HttpContext).IsAdmin)
+        //    {
+        //        ViewData["ErrorMessage"] = ErrorMessages.ShouldBeAdmin;
+        //        return false;
+        //    }
+        //    return base.IsAuthorized();
+        //}
     }
 }

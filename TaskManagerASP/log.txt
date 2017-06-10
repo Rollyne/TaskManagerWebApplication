@@ -24,3 +24,11 @@ TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was called at 
 TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 09/06/2017 23:15:02.It took 00:00:00.0315603
 TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was called at 09/06/2017 23:15:08
 TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 09/06/2017 23:15:08.It took 00:00:00.0465576
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was called at 10/06/2017 17:02:12
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 10/06/2017 17:02:14.It took 00:00:01.3738736
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was called at 10/06/2017 17:09:15
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 10/06/2017 17:09:17.It took 00:00:01.3095253
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was called at 10/06/2017 17:09:41
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 10/06/2017 17:09:41.It took 00:00:00.0625645
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was called at 10/06/2017 17:13:44
+TaskManagerASP.Controllers.TasksController.Index (TaskManagerASP) was executed at 10/06/2017 17:13:45.It took 00:00:01.3082580

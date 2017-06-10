@@ -5,11 +5,13 @@ using Data.Entities.Entities;
 using Data.Entities.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TaskManagerASP.Filters;
 using TaskManagerASP.Models;
 using TaskManagerASP.Tools;
 
 namespace TaskManagerASP.Controllers
 {
+    [Authorize]
     public abstract class BaseCRUDController<TEntity, TIndexViewModel> : Controller
         where TEntity : class, IIdentificatable, new()
         where TIndexViewModel : class, new()
@@ -21,15 +23,15 @@ namespace TaskManagerASP.Controllers
         protected abstract Expression<Func<TEntity, TIndexViewModel>> ViewModelQuery { get; }
         protected abstract TEntity ParseToEntity(TIndexViewModel item);
 
-        protected virtual bool IsAuthorized()
-        {
-            if (AuthenticationManager.GetLoggedUser(HttpContext) == null)
-            {
-                ModelState.AddModelError("AccessDenied", ErrorMessages.NotAuthenticatedUser);
-                return false;
-            }
-            return true;
-        }
+        //protected virtual bool IsAuthorized()
+        //{
+        //    if (AuthenticationManager.GetLoggedUser(HttpContext) == null)
+        //    {
+        //        ModelState.AddModelError("AccessDenied", ErrorMessages.NotAuthenticatedUser);
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
         protected virtual bool Exists(TEntity item)
         {
@@ -40,11 +42,11 @@ namespace TaskManagerASP.Controllers
 
         public virtual IActionResult Index(int? itemsPerPage, int page = 1)
         {
-            if (!IsAuthorized())
-            {
-                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
-                return RedirectToAction("Login", "Home");
-            }
+            //if (!IsAuthorized())
+            //{
+            //    ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
+            //    return RedirectToAction("Login", "Home");
+            //}
             int itemsAmount;
             if (itemsPerPage != null)
             {
@@ -72,11 +74,11 @@ namespace TaskManagerASP.Controllers
 
         public IActionResult Details(int id)
         {
-            if (!IsAuthorized())
-            {
-                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
-                return RedirectToAction("Index", "Home");
-            }
+            //if (!IsAuthorized())
+            //{
+            //    ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
+            //    return RedirectToAction("Index", "Home");
+            //}
             TIndexViewModel vm;
             using (var repo = GetRepository())
             {
@@ -94,22 +96,22 @@ namespace TaskManagerASP.Controllers
         [HttpGet]
         public virtual IActionResult Create()
         {
-            if (!IsAuthorized())
-            {
-                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
-                return RedirectToAction("Index", "Home");
-            }
+            //if (!IsAuthorized())
+            //{
+            //    ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             return View(new TEntity());
         }
         [HttpPost]
         public virtual IActionResult Create(TEntity item)
         {
-            if (!IsAuthorized())
-            {
-                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
-                return RedirectToAction("Index", "Home");
-            }
+            //if (!IsAuthorized())
+            //{
+            //    ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             if (ModelState.IsValid)
             {
@@ -126,11 +128,11 @@ namespace TaskManagerASP.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            if (!IsAuthorized())
-            {
-                ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
-                return RedirectToAction("Index", "Home");
-            }
+            //if (!IsAuthorized())
+            //{
+            //    ModelState.AddModelError("NoAccess", ErrorMessages.NoAccess());
+            //    return RedirectToAction("Index", "Home");
+            //}
             TEntity item;
             using (var repo = GetRepository())
             {
@@ -147,10 +149,10 @@ namespace TaskManagerASP.Controllers
         [HttpPost]
         public virtual IActionResult Edit(TEntity item)
         {
-            if (!IsAuthorized())
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            //if (!IsAuthorized())
+            //{
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             if (ModelState.IsValid)
             {
@@ -169,10 +171,10 @@ namespace TaskManagerASP.Controllers
 
         public IActionResult Delete(int id)
         {
-            if (!IsAuthorized())
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            //if (!IsAuthorized())
+            //{
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             TEntity item;
             using (var repo = GetRepository())
